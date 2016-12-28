@@ -5,8 +5,8 @@
 \title{Probabilistic Patient Record Linkage}
 \usage{
 recordLink(data1, data2, dates1 = NULL, dates2 = NULL, eps_plus, eps_minus,
-  aggreg_2ways = "mean", min_prev = 0.01, data1_cont2diff, data2_cont2diff,
-  d_max, use_diff = TRUE)
+  aggreg_2ways = "mean", min_prev = 0.01, data1_cont2diff = NULL,
+  data2_cont2diff = NULL, d_max, use_diff = TRUE)
 }
 \arguments{
 \item{data1}{either a binary matrix or binary dataframe of dimension \code{nA x K} whose rownames are the observation identifiers.}
@@ -33,11 +33,11 @@ Default is 1\%.}
 
 \item{data1_cont2diff}{either a matrix or dataframe of continuous features, 
 such as age, for which the similarity measure uses the difference with 
-\code{data2_cont2diff}, whose rownames are .}
+\code{data2_cont2diff}, whose rownames are . Default is \code{NULL}.}
 
 \item{data2_cont2diff}{either a matrix or dataframe of continuous features, 
 such as age, for which the similarity measure uses the difference with 
-\code{data2_cont1diff}, whose rownames are .}
+\code{data2_cont1diff}, whose rownames are . Default is \code{NULL}.}
 
 \item{d_max}{a numeric vector of length \code{K} giving the minimum difference 
 from which it is considered a discrepency.}
@@ -54,5 +54,21 @@ Probabilistic Patient Record Linkage
 \code{Dates:} the use of \code{dates1} and \code{dates2} requires that at least one date interval matches across 
 \code{dates1} and \code{dates2} for claiming an agreement on a diagnosis code between \code{data1} and \code{data2}, 
 in addition of having that very same code recorded in both.
+}
+\examples{
+set.seed(123)
+ncodes <- 500
+npat <- 200
+incid <- abs(rnorm(n=ncodes, 0.15, 0.07))
+bin_codes <- rbinom(n=npat*ncodes, size=1,  prob=rep(incid, npat))
+bin_codes_mat <- matrix(bin_codes, ncol=ncodes, byrow = TRUE)
+data1_ex <- bin_codes_mat[1:(npat/2+npat/10),]
+data2_ex <- bin_codes_mat[c(1:(npat/10), (npat/2+npat/10 + 1):npat),]
+rownames(data1_ex) <- paste0("ID", 1:(npat/2+npat/10), "_data1")
+rownames(data2_ex) <- paste0("ID", c(1:(npat/10), (npat/2+npat/10 + 1):npat), "_data2")
+
+res <- recordLink(data1 = data1_ex, data2 = data2_ex, use_diff=FALSE, eps_minus = 0.01, eps_plus = 0.01)
+round(res[c(1:3, 20:23), c(1:3, 20:23)], 3)
+
 }
 
