@@ -2,16 +2,21 @@
 % Please edit documentation in R/em_winkler.R
 \name{matching_score}
 \alias{matching_score}
-\title{#'@keywords internal
-estep_vect <- function(ag_score, p, m, u){
-  a <-exp(log(p) + ag_score%*%log(m) + (1-ag_score)%*%log(1-m))
-  b <- exp(log(1-p) + ag_score%*%log(u) + (1-ag_score)%*%log(1-u))
-  return(cbind(a/(a+b), b/(a+b)))
-}}
+\title{Computes a matching score from aggrement vectors and weights}
 \usage{
 matching_score(agree, m, u)
 }
 \description{
-#'@keywords internal
+Computes a matching score from aggrement vectors and weights
 }
+\examples{
+estep_vect <- function(ag_score, p, m, u){
+  a <-exp(log(p) + ag_score\%*\%log(m) + (1-ag_score)\%*\%log(1-m))
+  b <- exp(log(1-p) + ag_score\%*\%log(u) + (1-ag_score)\%*\%log(1-u))
+  return(cbind(a/(a+b), b/(a+b)))
+}
+
+
+}
+\keyword{internal}
 

@@ -6,12 +6,18 @@
 \usage{
 recordLink(data1, data2, dates1 = NULL, dates2 = NULL, eps_plus, eps_minus,
   aggreg_2ways = "mean", min_prev = 0.01, data1_cont2diff, data2_cont2diff,
-  eps_inf, d_max, use_diff = TRUE)
+  d_max, use_diff = TRUE)
 }
 \arguments{
-\item{data1}{either a binary matrix or dataframe whose rownames are .}
+\item{data1}{either a binary matrix or binary dataframe of dimension \code{nA x K} whose rownames are the observation identifiers.}
 
-\item{data2}{either a binary matrix or a dataframe whose rownames are .}
+\item{data2}{either a binary matrix or a binary dataframe of dimension \code{nB x K} whose rownames are the observation identifiers.}
+
+\item{dates1}{matrix or dataframe of dimension \code{nA x K} including the concatenated dates intervals for each corresponding 
+diagnosis codes in \code{data1}. Default is \code{NULL} in which case dates are not used.}
+
+\item{dates2}{matrix or dataframe of dimension \code{nB x K} including the concatenated dates intervals for each corresponding 
+diagnosis codes in \code{data2}. Default is \code{NULL} in which case dates are not used. See details.}
 
 \item{eps_plus}{discrepancy rate between \code{data1} and \code{data2}}
 
@@ -32,11 +38,21 @@ such as age, for which the similarity measure uses the difference with
 \item{data2_cont2diff}{either a matrix or dataframe of continuous features, 
 such as age, for which the similarity measure uses the difference with 
 \code{data2_cont1diff}, whose rownames are .}
+
+\item{d_max}{a numeric vector of length \code{K} giving the minimum difference 
+from which it is considered a discrepency.}
+
+\item{use_diff}{logical flag indicating whether continuous diffenrentiable variables should be used in the}
 }
 \value{
 the posterior probability of matching matrix
 }
 \description{
 Probabilistic Patient Record Linkage
+}
+\details{
+\code{Dates:} the use of \code{dates1} and \code{dates2} requires that at least one date interval matches across 
+\code{dates1} and \code{dates2} for claiming an agreement on a diagnosis code between \code{data1} and \code{data2}, 
+in addition of having that very same code recorded in both.
 }
 

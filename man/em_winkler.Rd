@@ -2,9 +2,13 @@
 % Please edit documentation in R/em_winkler.R
 \name{em_winkler}
 \alias{em_winkler}
+\alias{em_winkler_big}
 \title{Implementation of Winkler's EM algorithmf or Fellegi-Sunter matching method}
 \usage{
-em_winkler(data1, data2, tol = 0.01, maxit = 15, do_plot = TRUE,
+em_winkler(data1, data2, tol = 0.001, maxit = 500, do_plot = TRUE,
+  verbose = FALSE)
+
+em_winkler_big(data1, data2, tol = 0.001, maxit = 500, do_plot = TRUE,
   verbose = FALSE)
 }
 \arguments{
@@ -27,24 +31,22 @@ a matrix of size \code{n1 x n2} with the matching score for each \code{n1*n2} pa
 }
 \description{
 Implementation of Winkler's EM algorithmf or Fellegi-Sunter matching method
+
+\code{em_winkler_big} implements the same method when the data are too big to compute 
+the agreement matrix. Agreement is then recomputed on the fly each time it is needed. The EM steps 
+are completely done in C++. This decreases the RAM usage (still important though), at the cost of 
+increasing computationnal time.
 }
 \examples{
-#mat1 <- matrix(round(rnorm(n=1000, sd=1.2)), ncol=10, nrow=100)
-#mat2 <- rbind(mat1[1:10, ],
-#              matrix(round(rnorm(n=900, sd=1.2)), ncol=10, nrow=90)
-#              )
-mat1 <- matrix(round(rnorm(n=1000, sd=12)), ncol=10, nrow=100)
+mat1 <- matrix(round(rnorm(n=1000, sd=1.2)), ncol=10, nrow=100)
 mat2 <- rbind(mat1[1:10, ],
-             matrix(round(rnorm(n=900, sd=12)), ncol=10, nrow=90)
+             matrix(round(rnorm(n=900, sd=1.2)), ncol=10, nrow=90)
              )
 rownames(mat1) <- paste0("A", 1:nrow(mat1))
 rownames(mat1) <- paste0("B", 1:nrow(mat1))
 mat1 <- 1*(mat1>1)
 mat2 <- 1*(mat2>1)
-res <- em_winkler(mat1, mat2)
-res <- em_winkler(mat1, mat1)
-plot(density(as.vector(res$matchingScore)))
-
+em_winkler(mat1, mat2)
 
 }
 \references{

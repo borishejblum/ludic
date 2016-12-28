@@ -2,15 +2,9 @@
 % Please edit documentation in R/RcppExports.R
 \name{strsplitC}
 \alias{strsplitC}
-\alias{strsplitC_memoryPbs}
-\alias{strsplitC_safe}
 \title{Splitting a character string in C++}
 \usage{
 strsplitC(s, sep)
-
-strsplitC_memoryPbs(s, sep)
-
-strsplitC_safe(s, sep)
 }
 \arguments{
 \item{s}{a character string to be split}
@@ -19,19 +13,9 @@ strsplitC_safe(s, sep)
 }
 \description{
 Splitting a character string in C++
-
-\code{strsplitC_memoryPbs} can have memory issues...
-
-\code{strsplitC_safe} implementation is safer in its memory treatment
 }
 \examples{
 strsplitC(c(";aaa;bb;cccc;ee;"), sep=";")
-strsplitC_memoryPbs(c(";aaa;bb ; cccc;ee;"), sep=";")
-strsplitC_safe(c(";aaa;bb ; cccc;ee;"), sep=";")
-strsplitC_safe(c(""), sep=";")
-strsplitC_safe(c("a"), sep=";")
-strsplitC_safe(c("bb ; ee"), sep=";")
-strsplitC_safe(c("bb ee"), sep=";")
 }
 \keyword{internal}
 

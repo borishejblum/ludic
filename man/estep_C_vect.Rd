@@ -4,7 +4,7 @@
 \alias{estep_C_vect}
 \title{Fast C++ implementation of Winkler's Method E step}
 \usage{
-estep_C_vect(agreemat, p, m, u, Log = FALSE)
+estep_C_vect(agreemat, p, m, u)
 }
 \description{
 Fast C++ implementation of Winkler's Method E step

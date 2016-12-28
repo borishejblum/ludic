@@ -2,13 +2,10 @@
 % Please edit documentation in R/RcppExports.R
 \name{matchingScore_C}
 \alias{matchingScore_C}
-\alias{matchingScore_C_sparse}
 \alias{matchingScore_C_sparse_big}
-\title{Fast C++ computation of the final posterior probabilities}
+\title{Fast C++ computation of the final posterior probabilities in the E-M Winkler's method}
 \usage{
 matchingScore_C(agreemat, m, u, nA, nB)
-
-matchingScore_C_sparse(agreemat, m, u, nA, nB)
 
 matchingScore_C_sparse_big(mat_A, mat_B, m, u)
 }
@@ -28,11 +25,9 @@ matchingScore_C_sparse_big(mat_A, mat_B, m, u)
 \item{mat_B}{a \code{nA x K} matrix of the database into which a match is looked for.}
 }
 \description{
-Fast C++ computation of the final posterior probabilities
+Fast C++ computation of the final posterior probabilities in the E-M Winkler's method
 
-matchingScore_C_sparse implements a version using spase matrices
-
-matchingScore_C_sparse_big implements a version using spase matrices and has a better 
-management of memory but is alittle bit slower (indicated for big matrices)
+matchingScore_C_sparse_big implements a version using spase matrices. It has a better 
+management of memory but is a little bit slower (indicated for big matrices)
 }
 

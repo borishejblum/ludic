@@ -1,8 +1,8 @@
 #'Probabilistic Patient Record Linkage
 #'
-#'@param data1 either a binary matrix or dataframe whose rownames are .
+#'@param data1 either a binary matrix or binary dataframe of dimension \code{nA x K} whose rownames are the observation identifiers.
 #'
-#'@param data2 either a binary matrix or a dataframe whose rownames are .
+#'@param data2 either a binary matrix or a binary dataframe of dimension \code{nB x K} whose rownames are the observation identifiers.
 #'
 #'@param data1_cont2diff either a matrix or dataframe of continuous features, 
 #'such as age, for which the similarity measure uses the difference with 
@@ -24,6 +24,22 @@
 #'@param min_prev minimum prevalence for the variables used in matching.
 #'Default is 1\%.
 #'
+#'@param d_max a numeric vector of length \code{K} giving the minimum difference 
+#'from which it is considered a discrepency.
+#'
+#'@param use_diff logical flag indicating whether continuous diffenrentiable variables should be used in the 
+#'
+#'@param dates1 matrix or dataframe of dimension \code{nA x K} including the concatenated dates intervals for each corresponding 
+#'diagnosis codes in \code{data1}. Default is \code{NULL} in which case dates are not used.
+#'
+#'@param dates2 matrix or dataframe of dimension \code{nB x K} including the concatenated dates intervals for each corresponding 
+#'diagnosis codes in \code{data2}. Default is \code{NULL} in which case dates are not used. See details.
+#'
+#'@details \code{Dates:} the use of \code{dates1} and \code{dates2} requires that at least one date interval matches across 
+#'\code{dates1} and \code{dates2} for claiming an agreement on a diagnosis code between \code{data1} and \code{data2}, 
+#'in addition of having that very same code recorded in both.
+#'
+#@param eps_inf discrepancy rate for the differentiable variables
 #'
 #'
 #'@importFrom landpred VTM
@@ -33,19 +49,20 @@
 #'
 #'@export
 
-recordLink <- function(data1, data2, dates1=NULL, dates2=NULL,
-                       eps_plus, eps_minus, aggreg_2ways="mean", 
-                       min_prev=0.01, 
+recordLink <- function(data1, data2, dates1 = NULL, dates2 = NULL,
+                       eps_plus, eps_minus, aggreg_2ways = "mean", 
+                       min_prev = 0.01, 
                        data1_cont2diff, data2_cont2diff,
-                       eps_inf, d_max, use_diff=TRUE){
-  #browser()
+                       #eps_inf, 
+                       d_max, use_diff=TRUE){
+  
   datesNotNull <- (!is.null(dates1) & !is.null(dates2))
   nb_feat <- ncol(data1)
   if(ncol(data2)!=nb_feat){stop("Number of columns in data2 is different from data1")}
   n1 <- nrow(data1)
   n2 <- nrow(data2)
   if((is.null(data1_cont2diff) || is.null(data2_cont2diff)) && use_diff){
-    stop("cannot use_diff when data1_cont2diff and/or data2_cont2diff is NULL")
+    stop("cannot 'use_diff' when 'data1_cont2diff' and/or 'data2_cont2diff' is NULL")
   }
   if((is.null(dates1) & !is.null(dates2)) | (!is.null(dates1) & is.null(dates2))){
     stop("missing one of the dates tables")
@@ -55,14 +72,13 @@ recordLink <- function(data1, data2, dates1=NULL, dates2=NULL,
     ndiff <- ncol(data1_cont2diff) 
     stopifnot(ncol(data2_cont2diff)==ndiff)
     
-    
-    if(length(eps_inf)==1 && ndiff>1){
-      eps_inf <- rep(eps_inf, ndiff)
-    }  
+    #if(length(eps_inf)==1 && ndiff>1){
+    #  eps_inf <- rep(eps_inf, ndiff)
+    #}
     if(length(d_max)==1 && ndiff>1){
       d_max <- rep(d_max, ndiff)
     }
-    stopifnot(length(eps_inf)==ndiff)
+    #stopifnot(length(eps_inf)==ndiff)
     stopifnot(length(d_max)==ndiff)
   }
   
@@ -77,12 +93,11 @@ recordLink <- function(data1, data2, dates1=NULL, dates2=NULL,
     dates2_fs <- dates2[,freq_select, drop=FALSE]
   }
   #rm(list=c("data1", "data2"))
+  #n_freq10 <- sum(colSums(data1_bin)/nrow(data1_bin)<0.10 | colSums(data1_bin)/nrow(data1_bin)>0.90)
+  #n_freq5 <- sum(colSums(data1_bin)/nrow(data1_bin)<0.05 | colSums(data1_bin)/nrow(data1_bin)>0.95)
+  #n_freq1 <- sum(colSums(data1_bin)/nrow(data1_bin)<0.01 | colSums(data1_bin)/nrow(data1_bin)>0.99)
   
-  n_freq10 <- sum(colSums(data1_bin)/nrow(data1_bin)<0.10 | colSums(data1_bin)/nrow(data1_bin)>0.90)
-  n_freq5 <- sum(colSums(data1_bin)/nrow(data1_bin)<0.05 | colSums(data1_bin)/nrow(data1_bin)>0.95)
-  n_freq1 <- sum(colSums(data1_bin)/nrow(data1_bin)<0.01 | colSums(data1_bin)/nrow(data1_bin)>0.99)
-  
-  #removing info too rare in any of the 2 database ??
+  #removing info too rare in any of the 2 database ?
   col_in <- (pmax(apply(X=(data1_bin==0), MARGIN=2, FUN=mean), apply(X=data2_bin==0, MARGIN=2, FUN=mean)) < 0.995 &  
                pmin(apply(data1_bin==0,2,mean),apply(data2_bin==0,2,mean)) > 0.005)
   if(sum(col_in)<1){stop("No features whith adequate prevalence")}
@@ -130,12 +145,6 @@ recordLink <- function(data1, data2, dates1=NULL, dates2=NULL,
     eps_n[zeros_n] <- eps_n[zeros_n] + 1E-6
   }
   keep_eps <- which(eps_p!=1 & eps_n!=1)
-  #   weights_simil <- cbind("M1-R1"=log((1-eps_n[keep_eps])/pi2[keep_eps]),
-  #                          "M0-R0"=log((1-eps_p[keep_eps])/(1-pi2[keep_eps])),
-  #                          "M1-R0"=log((eps_n[keep_eps])/(1-pi2[keep_eps])),
-  #                          "M0-R1"=log((eps_p[keep_eps])/(pi2[keep_eps])))
-  #   weights_simil <- cbind.data.frame("ICD9"=rownames(weights_simil), weights_simil)
-  #   write.table(weights_simil, file="weights_simil_AllmedicareXraprod2008.txt", row.names = FALSE, sep="\t")
 
   if(datesNotNull){
     dist_bin <- loglikC_bin_wDates(Bmat = data2_bin[, keep_eps], Amat = data1_bin[, keep_eps],
@@ -147,25 +156,12 @@ recordLink <- function(data1, data2, dates1=NULL, dates2=NULL,
                              eps_n = eps_n[keep_eps], piA = pi1[keep_eps], piB = pi2[keep_eps])
   }
   
-  #browser()
-  # colnames(dist_bin) <- rownames(data2_bin)
-  # rownames(dist_bin) <- rownames(data1_bin)
-  # mean(rowSums(data1[rownames(dist_bin)[-which(rownames(dist_bin) %in% truth$bene_id)][apply(dist_bin[-which(rownames(dist_bin) %in% truth$bene_id), truth$linkage_id], 2, which.max)], ]*data2[truth$linkage_id,]))
-  # mean(rowSums(data2[colnames(dist_bin)[-which(colnames(dist_bin) %in% truth$linkage_id)][apply(dist_bin[truth$bene_id, -which(colnames(dist_bin) %in% truth$linkage_id)], 1, which.max)], ]*data1[truth$bene_id,]))
-  # mean(rowSums(data2[truth$linkage_id,]*data1[truth$bene_id,]))
-  # rm(list=c("data1", "data2"))
-  
   if(use_diff){
     pi_inf <- numeric(ndiff)
     for(j in 1:ndiff){
       pi_inf[j] <- mean((unlist(lapply(data1_cont2diff[, j, drop=FALSE], function(x){x-data2_cont2diff[, j, drop=FALSE]}))<d_max[j]))
-      #pi_sup <- mean(!(unlist(lapply(data1_cont2diff, function(x){x-data2_cont2diff}))<d_max))
     }
-    #     dist_diff <- loglikratioC_diff(Bmat = as.matrix(t(data2_cont2diff)), 
-    #                                    Amat =  as.matrix(t(data1_cont2diff)), 
-    #                                    d_max = d_max, eps_inf = eps_inf, 
-    #                                    pi_inf = pi_inf)
-    #arbitrary weight on age
+    
     dist_diff <- loglikratioC_diff_arbitrary(Bmat = as.matrix(t(data2_cont2diff)), 
                                              Amat =  as.matrix(t(data1_cont2diff)), 
                                              d_max = d_max, 
@@ -177,19 +173,9 @@ recordLink <- function(data1, data2, dates1=NULL, dates2=NULL,
   }else{
     dist_all <- dist_bin
   }
-  #rm(list=c("data1_bin", "data2_bin"))
+  rm(list=c("data1_bin", "data2_bin"))
   colnames(dist_all) <- ind2
   rownames(dist_all) <- ind1
-  #hist(as.vector(dist_all), n=1000)
-  
-  #   dist_all_2way <- loglikC_mat(Bmat = data1_bin, Amat = data2_bin, eps_p = eps_n*pi1/(1-pi2), 
-  #                                eps_n = eps_p*(1-pi1)/pi2, piA = pi2, piB = pi1)
-  #   colnames(dist_all_2way) <- row.names(data1_bin)
-  #   rownames(dist_all_2way) <- row.names(data2_bin)
-  
-  
-  #loglik_FUN(Bvec = data1_bin[1,], Amat = data2_bin, eps_p = eps_n*pi1/(1-pi2), 
-  #           eps_n = eps_p*(1-pi1)/pi2, piA = pi2, piB = pi1)
   
   #sstdFit genrerates warnings - to be ignored
   if(length(dist_all)>10000){
@@ -208,41 +194,20 @@ recordLink <- function(data1, data2, dates1=NULL, dates2=NULL,
     sstdFit_1way$est <-  sstdFit_1way$estimate
   }
   
-  #   sstdFit_2way <-  try(sstdFit(x=sample(dist_all_2way,10000)))
-  #   if(inherits(sstdFit_2way, "try-error")){sstdFit_2way <-  try(sstdFit(x=sample(dist_all_2way,10000)))}
-  #   tmp_est <-  sstdFit_2way$estimate
-  #   for(i in 1:4){
-  #     sstdFit_2way_sub <-  try(sstdFit(x=sample(dist_all_2way,10000)))
-  #     if(inherits(sstdFit_2way_sub, "try-error")){sstdFit_2way_sub <-  try(sstdFit(x=sample(dist_all_2way,10000)))}
-  #     tmp_est <-  rbind(tmp_est, sstdFit_2way_sub$estimate)
-  #   }
-  #   sstdFit_2way$est <-  colMeans(tmp_est)
-  
   inter_x <- 0.1
   obs_dist_x_1way <- seq(min(dist_all), max(dist_all), by=inter_x)
-  # obs_dist_x_2way <- seq(min(dist_all_2way), max(dist_all_2way), by=inter_x)
+  
   
   ### select cutoff
-  # empirical solution
-  #single skew-t parametric estimation
-  fitskewt_dens_est <- fGarch::dsstd(obs_dist_x_1way,
-                                     mean=sstdFit_1way$est[1], 
-                                     sd=sstdFit_1way$est[2],
-                                     nu=sstdFit_1way$est[3],
-                                     xi=sstdFit_1way$est[4])
-  peak_fitskewt_dens_est <- max(fitskewt_dens_est)
-  rho1_hat_empirical_1way <- min((obs_dist_x_1way[obs_dist_x_1way >= peak_fitskewt_dens_est])[fitskewt_dens_est[obs_dist_x_1way >= peak_fitskewt_dens_est]/peak_fitskewt_dens_est < 1/min(n1,n2)])
-  #if(is.infinite(rho1_hat_empirical_1way)){
-  #}
-  
-  #   fitskewt_dens_est <- dsstd(obs_dist_x_2way,
-  #                              mean=sstdFit_2way$est[1], 
-  #                              sd=sstdFit_2way$est[2],
-  #                              nu=sstdFit_2way$est[3],
-  #                              xi=sstdFit_2way$est[4])
-  #   peak_fitskewt_dens_est <- max(fitskewt_dens_est)
-  #   rho1_hat_empirical_2way <- min((obs_dist_x_2way[obs_dist_x_2way >= peak_fitskewt_dens_est])[fitskewt_dens_est[obs_dist_x_2way >= peak_fitskewt_dens_est]/peak_fitskewt_dens_est < 1/min(n1,n2)])
-  #   
+  # # empirical solution
+  # # single skew-t parametric estimation
+  # fitskewt_dens_est <- fGarch::dsstd(obs_dist_x_1way,
+  #                                    mean=sstdFit_1way$est[1], 
+  #                                    sd=sstdFit_1way$est[2],
+  #                                    nu=sstdFit_1way$est[3],
+  #                                    xi=sstdFit_1way$est[4])
+  # peak_fitskewt_dens_est <- max(fitskewt_dens_est)
+  # rho1_hat_empirical_1way <- min((obs_dist_x_1way[obs_dist_x_1way >= peak_fitskewt_dens_est])[fitskewt_dens_est[obs_dist_x_1way >= peak_fitskewt_dens_est]/peak_fitskewt_dens_est < 1/min(n1,n2)])
   
   # analytical solution
   nu <-  sstdFit_1way$est[3]
@@ -254,19 +219,6 @@ recordLink <- function(data1, data2, dates1=NULL, dates2=NULL,
   mu <- m1*(xi-1/xi)
   sigma <- sqrt((1-m1^2)*(xi^2+1/xi^2)+2*m1^2-1)
   d1max_x <- m-(mu-xi*sqrt((nu-2)/(nu+2)))*s/sigma  
-  #m-mu*s/sigma
-  #m-(mu+1/xi*sqrt((nu-2)/(nu+2)))*s/sigma
-  
-  #   nu <-  sstdFit_2way$est[3]
-  #   s <-  sstdFit_2way$est[2]
-  #   m <-  sstdFit_2way$est[1]
-  #   xi <-  sstdFit_2way$est[4]
-  #   Beta <- gamma(0.5)/gamma((nu+1)/2)*gamma(nu/2)
-  #   m1 <- 2*sqrt(nu-2)/((nu-1)*Beta)
-  #   mu <- m1*(xi-1/xi)
-  #   sigma <- sqrt((1-m1^2)*(xi^2+1/xi^2)+2*m1^2-1)
-  #   rho1_hat_2way <- m-(mu-xi*sqrt((nu-2)/(nu+2)))*s/sigma
-  
   
   d1 <- function(x){
     #c <- 2*sigma*gamma((nu+1)/2)/(s*(xi+1/xi)*sqrt(pi*nu-2)*gamma(nu/2))
@@ -294,17 +246,13 @@ recordLink <- function(data1, data2, dates1=NULL, dates2=NULL,
   rm(list="obs_dist_x_1way")
   
   
-  dist_all_select <- dist_all > rho1_hat #rho1_hat_empirical_1way
-  # sum(dist_all > d1max_x)
-  # dist_all_2way_select <- dist_all_2way > rho1_hat_2way
+  dist_all_select <- dist_all > rho1_hat # rho1_hat_empirical_1way
   nmatch_hat_1way <- min(sum(colSums(dist_all_select)>=1), sum(rowSums(dist_all_select)>=1)) # Empirical Bayes prior on P(M=1)
   rm(list="dist_all_select")
   
   prop_match_1way <- nmatch_hat_1way/(n1*n2)
-  # nmatch_hat_2way <- sum(dist_all_2way_select) # Empirical Bayes prior on P(M=1)
-  # prop_match_2way <- nmatch_hat_2way/(nrow(data1_bin)*nrow(data2_bin))
   
-  rank_match_1 <- matchProbs_rank_full_C(dist_all+100, prop_match=prop_match_1way)
+  rank_match_1 <- matchProbs_rank_full_C(dist_all, prop_match=prop_match_1way)
   rownames(rank_match_1) <- ind1
   colnames(rank_match_1) <- ind2
   rank_match_2 <- t(matchProbs_rank_full_C(t(dist_all), prop_match=prop_match_1way))

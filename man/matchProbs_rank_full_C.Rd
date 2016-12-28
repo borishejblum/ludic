@@ -2,30 +2,20 @@
 % Please edit documentation in R/RcppExports.R
 \name{matchProbs_rank_full_C}
 \alias{matchProbs_rank_full_C}
-\title{Compute the probabilities for an observation to match other observations}
+\title{Compute the matching probabilities for each pair of observations}
 \usage{
 matchProbs_rank_full_C(computed_dist, prop_match)
 }
 \arguments{
-\item{computed_dist}{an \code{n x p} matrix of computed distances used for ranking.}
+\item{computed_dist}{a \code{n x p} matrix of computed distances used for ranking.}
 
-\item{prop_match}{estimated proportion of match ("rho_1")}
-
-\item{id0}{the index for the reference observation in \code{1:n} to be match to p other observations}
-
-\item{yes_aggregate}{logical flag for wether the results are sorted according to the
-original probability or the aggregated probability. Default is \code{TRUE}.}
-
-\item{k0}{number of top (highest) matching probabilities to return. 
-Default is 5.}
+\item{prop_match}{a priori proportion of matches ("rho_1")}
 }
 \value{
-a character vector of length \code{k0*4} containing for each k0
-potential match, inturn, the probability, the aggregated probability, the logLR 
-abd the corresponding potential matching ID.
+a \code{n x p} matrix containing the matching probabilities for each pair
 }
 \description{
-C++ version: for a given observation of index id0 (in \code{1:n}), all the matching probabilities are computed
-for the other \code{p} observations.
+C++ version: for each observations in \code{(1:n)}, all the matching probabilities are computed
+for the \code{p} possible pairs.
 }
 

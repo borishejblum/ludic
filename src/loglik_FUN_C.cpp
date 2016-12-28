@@ -6,7 +6,7 @@ using namespace arma;
 
 //'C++ implementation of the pseudo-likelihood computation 
 //'
-//'@param Bvec a vector of length K the observations to be matched.
+//'@param Bmat \code{K x nB} matrix of the observations to be matched.
 //'
 //'@param Amat \code{nA x K} matrix the database into which a match is looked for.
 //'
@@ -22,125 +22,7 @@ using namespace arma;
 //'@param piB a vector of length \code{K} giving the prior probabilities of 
 //'observing each variable in B.
 //'
-//'@rdname loglikC
-//'
-//'@export
-// [[Rcpp::export]]
-NumericVector loglikC(NumericVector Bvec, 
-                      arma::mat Amat,
-                      NumericVector eps_p,
-                      NumericVector eps_n,
-                      NumericVector piA,
-                      NumericVector piB){
-  
-  vec B = as<vec>(Bvec);
-  vec e_p = as<vec>(eps_p);
-  vec e_n = as<vec>(eps_n);
-  vec pi_A = as<vec>(piA);
-  vec pi_B = as<vec>(piB);
-  
-  int n = Amat.n_rows;
-  
-  NumericVector res = NumericVector(n);
-  
-  vec oneone = B%log((1-e_p)/pi_B);
-  vec zerozero = (1-B)%log((1-e_n)/(1-pi_B));
-  vec onezero = (1-B)%log(e_p/(1-pi_B));
-  vec zeroone = B%log(e_n/pi_B);
-  
-  for(int i=0; i<n; i++){
-    rowvec Atemp = Amat.row(i);
-    vec lik_temp = Atemp*oneone + (1-Atemp)*zerozero + Atemp*onezero + (1-Atemp)*zeroone;
-    res(i) = lik_temp(0);
-  }
-  
-  return(res);
-}
-
-
-//'@rdname loglikC
-//'
-//'@param Bmat \code{K x nB} matrix of the observations to be matched.
-//'
-//'@export
-// [[Rcpp::export]]
-NumericMatrix loglikC_mat(arma::mat Bmat, 
-                          arma::mat Amat,
-                          NumericVector eps_p,
-                          NumericVector eps_n,
-                          NumericVector piA,
-                          NumericVector piB){
-  
-  mat B_t = Bmat.t();
-  colvec e_p = as<colvec>(eps_p);
-  colvec e_n = as<colvec>(eps_n);
-  colvec pi_A = as<colvec>(piA);
-  colvec pi_B = as<colvec>(piB);
-  
-  int K = Amat.n_rows;
-  int n = B_t.n_cols;
-  
-  NumericMatrix res = NumericMatrix(K,n);
-  
-  for(int j=0; j<n; j++){
-    colvec Btemp = B_t.col(j);
-    colvec oneone = Btemp%log((1-e_p)/pi_B);
-    colvec zerozero = (1-Btemp)%log((1-e_n)/(1-pi_B));
-    colvec onezero = (1-Btemp)%log(e_p/(1-pi_B));
-    colvec zeroone = Btemp%log(e_n/pi_B);
-    
-    for(int i=0; i<K; i++){
-      rowvec Atemp = Amat.row(i);
-      vec lik_temp = Atemp*oneone + (1-Atemp)*zerozero + Atemp*onezero + (1-Atemp)*zeroone;
-      res(i,j) = lik_temp(0);
-    }
-  }
-  
-  return(res);
-}
-
-
-//'@rdname loglikC
-//'
-//'@description \code{loglikC_mat_fast} is a faster C++ implementation of the pseudo-likelihood computation 
-//'
-//'@export
-// [[Rcpp::export]]
-NumericMatrix loglikC_mat_fast(arma::mat Bmat, 
-                               arma::mat Amat,
-                               NumericVector eps_p,
-                               NumericVector eps_n,
-                               NumericVector piA,
-                               NumericVector piB){
-  
-  mat B_t = Bmat.t();
-  colvec e_p = as<colvec>(eps_p);
-  colvec e_n = as<colvec>(eps_n);
-  colvec pi_A = as<colvec>(piA);
-  colvec pi_B = as<colvec>(piB);
-  
-  int K = Amat.n_rows;
-  int n = B_t.n_cols;
-  
-  mat res = mat(K,n);
-  
-  for(int j=0; j<n; j++){
-    colvec Btemp = B_t.col(j);
-    colvec oneone = Btemp%log((1-e_p)/pi_B);
-    colvec zerozero = (1-Btemp)%log((1-e_n)/(1-pi_B));
-    colvec onezero = (1-Btemp)%log(e_p/(1-pi_B));
-    colvec zeroone = Btemp%log(e_n/pi_B);
-    
-    vec lik_temp = Amat*oneone + (1-Amat)*zerozero + Amat*onezero + (1-Amat)*zeroone;
-    res.col(j) = lik_temp;
-  }
-  
-  return(wrap(res));
-}
-
-
-
-//'@rdname loglikC
+//'@rdname loglikC_bin
 //'
 //'@description \code{loglikC_bin} implements an even faster C++ implementation of the pseudo-likelihood computation for binary
 //'variables
@@ -247,7 +129,7 @@ std::vector<std::string> strsplitC(std::string s, char sep){
 
 
 
-//'@rdname loglikC
+//'@rdname loglikC_bin
 //'
 //'@description \code{loglikC_bin_wDates} implements a C++ implementation of the pseudo-likelihood computation for binary
 //'variables with dates
@@ -362,49 +244,6 @@ NumericMatrix loglikC_bin_wDates(arma::mat Bmat,
 
 
 
-//'@rdname loglikC
-//'
-//'@description \code{loglikratioC_diff} is a C++ implementation of the log-likelihood ratio computation for 
-//'differentiable variables
-//'
-//'@param d_max a numeric vector of length \code{K} giving the minimum difference 
-//'from which it is considered a discrepency.
-//'
-//'@param eps_inf discrepancy rate for the differentiable variables
-//'
-//'@param pi_inf the prior probability that the difference is greter than \code{d_max}
-//'
-//'@export
-// [[Rcpp::export]]
-NumericMatrix loglikratioC_diff(arma::mat Bmat, 
-                                arma::mat Amat,
-                                NumericVector d_max,
-                                NumericVector eps_inf,
-                                NumericVector pi_inf){
-  
-  colvec e_inf = as<colvec>(eps_inf);
-  //colvec e_sup = as<colvec>(eps_sup);
-  colvec p_inf = as<colvec>(pi_inf);
-  //colvec p_sup = as<colvec>(pi_sup);
-  colvec dmax = as<colvec>(d_max);
-  
-  int nA = Amat.n_cols;
-  int nB = Bmat.n_cols;
-  
-  mat res = mat(nA,nB);
-  
-  for(int j=0; j<nB; j++){
-    mat A_minus_Btemp = abs(Amat.each_col() - Bmat.col(j));
-    umat A_minus_B_inf_u = A_minus_Btemp < repmat(dmax, 1, nA);
-    mat A_minus_B_inf = conv_to<mat>::from(A_minus_B_inf_u);
-    mat A_minus_B_sup = (1.0-A_minus_B_inf);
-    mat inf_mat = (A_minus_B_inf.each_col() % log((1-e_inf)/p_inf)) + (A_minus_B_sup.each_col() % log(e_inf/(1-p_inf)));
-    rowvec lik_temp = sum(inf_mat, 0);
-    res.col(j) = lik_temp.t();
-  }
-  
-  return(wrap(res));
-}
 
 
 
@@ -413,9 +252,12 @@ NumericMatrix loglikratioC_diff(arma::mat Bmat,
 //'Fast C++ implementation of the log-likelihood ratio computation for 
 //'differentiating variables
 //'
+//'@param d_max a numeric vector of length \code{K} giving the minimum difference 
+//'from which it is considered a discrepency.
+//'
 //'@param cost a numeric vector of length \code{K} giving the arbitrary cost of discrepency.
 //'
-//'@rdname loglikC
+//'@rdname loglikC_bin
 //'
 //'@export
 // [[Rcpp::export]]

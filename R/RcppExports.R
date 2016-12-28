@@ -33,74 +33,11 @@ agree_C_sparse <- function(mat_A, mat_B) {
     .Call('ludic_agree_C_sparse', PACKAGE = 'ludic', mat_A, mat_B)
 }
 
-#'Fast C++ implementation of mean number of 1's in common for a pair of rows, each taken from one 
-#'of 2 binary matrices
-#'
-#'@param mat_A a \code{nB x K} matrix of the observations to be matched. Must be positive integers 
-#'(supposed to be binary).
-#'@param mat_B a \code{nA x K} matrix of the database into which a match is looked for. Must be 
-#'positive integers (supposed to be binary).
-#'@examples
-#'mat1 <- matrix(round(rnorm(n=500, sd=1.2)), ncol=10, nrow=50)
-#'mat2 <- rbind(mat1[1:10, ],
-#'              matrix(round(rnorm(n=400, sd=1.2)), ncol=10, nrow=40)
-#'              )
-#'rownames(mat1) <- paste0("A", 1:nrow(mat1))
-#'rownames(mat1) <- paste0("B", 1:nrow(mat1))
-#'mat1 <- 1*(mat1>1)
-#'mat2 <- 1*(mat2>1)
-#'common1Mean_C(mat1, mat2)
-#'m <- numeric(50^2)
-#'for(i in 1:50){
-#' for(j in 1:50){
-#'   m[(i-1)*50 + j] <- sum(mat1[i, ]*mat2[j, ])
-#' }
-#'}
-#'mean(m)
-#'
-#'@export
-common1Mean_C <- function(mat_A, mat_B) {
-    .Call('ludic_common1Mean_C', PACKAGE = 'ludic', mat_A, mat_B)
-}
-
-#'C++ implementation of Winkler's Method E step
-#'using a sparse agreement  matrix
-#'
-#'@keywords internal
-estep_C_sparse <- function(agreemat, p, m, u, Log = FALSE) {
-    .Call('ludic_estep_C_sparse', PACKAGE = 'ludic', agreemat, p, m, u, Log)
-}
-
-#'Fast C++ implementation of Winkler's Method E step
-#'using a sparse agreement  matrix
-#'
-#'@keywords internal
-estep_C_vect_sparse <- function(agreemat, p, m, u, Log = FALSE) {
-    .Call('ludic_estep_C_vect_sparse', PACKAGE = 'ludic', agreemat, p, m, u, Log)
-}
-
-#'Fast C++ implementation of Winkler's Method E step
-#'using two sparse matrices 
-#'
-#'Saving memory while conserving speed by avoiding casting agreemat_neg
-#'
-#'@keywords internal
-estep_C_vect_sparse2 <- function(agreemat, agreemat_neg, p, m, u, Log = FALSE) {
-    .Call('ludic_estep_C_vect_sparse2', PACKAGE = 'ludic', agreemat, agreemat_neg, p, m, u, Log)
-}
-
-#'C++ implementation of Winkler's Method E step
-#'
-#'@keywords internal
-estep_C <- function(agreemat, p, m, u, Log = FALSE) {
-    .Call('ludic_estep_C', PACKAGE = 'ludic', agreemat, p, m, u, Log)
-}
-
 #'Fast C++ implementation of Winkler's Method E step
 #'
 #'@keywords internal
-estep_C_vect <- function(agreemat, p, m, u, Log = FALSE) {
-    .Call('ludic_estep_C_vect', PACKAGE = 'ludic', agreemat, p, m, u, Log)
+estep_C_vect <- function(agreemat, p, m, u) {
+    .Call('ludic_estep_C_vect', PACKAGE = 'ludic', agreemat, p, m, u)
 }
 
 #'C++ implementation of the E and M steps from Winkler's EM algorithm estimating FS method 
@@ -111,27 +48,9 @@ EMstep_C_sparse_big <- function(mat_A, mat_B, p, m, u) {
     .Call('ludic_EMstep_C_sparse_big', PACKAGE = 'ludic', mat_A, mat_B, p, m, u)
 }
 
-#'C++ implementation of the E and M steps from Winkler's EM algorithm estimating FS method 
-#'using sparse matrices for big sample sizes
-#'
-#'@keywords internal
-#'@export
-Estep_C_sparse_big <- function(mat_A, mat_B, p, m, u, Log = FALSE) {
-    .Call('ludic_Estep_C_sparse_big', PACKAGE = 'ludic', mat_A, mat_B, p, m, u, Log)
-}
-
-#'C++ implementation of the E and M steps from Winkler's EM algorithm estimating FS method 
-#'using sparse matrices for big sample sizes
-#'
-#'@keywords internal
-#'@export
-Mstep_C_sparse_big <- function(mat_A, mat_B, g_m, g_u, Log = FALSE) {
-    .Call('ludic_Mstep_C_sparse_big', PACKAGE = 'ludic', mat_A, mat_B, g_m, g_u, Log)
-}
-
 #'C++ implementation of the pseudo-likelihood computation 
 #'
-#'@param Bvec a vector of length K the observations to be matched.
+#'@param Bmat \code{K x nB} matrix of the observations to be matched.
 #'
 #'@param Amat \code{nA x K} matrix the database into which a match is looked for.
 #'
@@ -147,32 +66,7 @@ Mstep_C_sparse_big <- function(mat_A, mat_B, g_m, g_u, Log = FALSE) {
 #'@param piB a vector of length \code{K} giving the prior probabilities of 
 #'observing each variable in B.
 #'
-#'@rdname loglikC
-#'
-#'@export
-loglikC <- function(Bvec, Amat, eps_p, eps_n, piA, piB) {
-    .Call('ludic_loglikC', PACKAGE = 'ludic', Bvec, Amat, eps_p, eps_n, piA, piB)
-}
-
-#'@rdname loglikC
-#'
-#'@param Bmat \code{K x nB} matrix of the observations to be matched.
-#'
-#'@export
-loglikC_mat <- function(Bmat, Amat, eps_p, eps_n, piA, piB) {
-    .Call('ludic_loglikC_mat', PACKAGE = 'ludic', Bmat, Amat, eps_p, eps_n, piA, piB)
-}
-
-#'@rdname loglikC
-#'
-#'@description \code{loglikC_mat_fast} is a faster C++ implementation of the pseudo-likelihood computation 
-#'
-#'@export
-loglikC_mat_fast <- function(Bmat, Amat, eps_p, eps_n, piA, piB) {
-    .Call('ludic_loglikC_mat_fast', PACKAGE = 'ludic', Bmat, Amat, eps_p, eps_n, piA, piB)
-}
-
-#'@rdname loglikC
+#'@rdname loglikC_bin
 #'
 #'@description \code{loglikC_bin} implements an even faster C++ implementation of the pseudo-likelihood computation for binary
 #'variables
@@ -197,7 +91,7 @@ strsplitC <- function(s, sep) {
     .Call('ludic_strsplitC', PACKAGE = 'ludic', s, sep)
 }
 
-#'@rdname loglikC
+#'@rdname loglikC_bin
 #'
 #'@description \code{loglikC_bin_wDates} implements a C++ implementation of the pseudo-likelihood computation for binary
 #'variables with dates
@@ -211,36 +105,22 @@ loglikC_bin_wDates <- function(Bmat, Amat, Bdates, Adates, eps_p, eps_n, piA, pi
     .Call('ludic_loglikC_bin_wDates', PACKAGE = 'ludic', Bmat, Amat, Bdates, Adates, eps_p, eps_n, piA, piB)
 }
 
-#'@rdname loglikC
-#'
-#'@description \code{loglikratioC_diff} is a C++ implementation of the log-likelihood ratio computation for 
-#'differentiable variables
+#'Fast C++ implementation of the log-likelihood ratio computation for 
+#'differentiating variables
 #'
 #'@param d_max a numeric vector of length \code{K} giving the minimum difference 
 #'from which it is considered a discrepency.
 #'
-#'@param eps_inf discrepancy rate for the differentiable variables
-#'
-#'@param pi_inf the prior probability that the difference is greter than \code{d_max}
-#'
-#'@export
-loglikratioC_diff <- function(Bmat, Amat, d_max, eps_inf, pi_inf) {
-    .Call('ludic_loglikratioC_diff', PACKAGE = 'ludic', Bmat, Amat, d_max, eps_inf, pi_inf)
-}
-
-#'Fast C++ implementation of the log-likelihood ratio computation for 
-#'differentiating variables
-#'
 #'@param cost a numeric vector of length \code{K} giving the arbitrary cost of discrepency.
 #'
-#'@rdname loglikC
+#'@rdname loglikC_bin
 #'
 #'@export
 loglikratioC_diff_arbitrary <- function(Bmat, Amat, d_max, cost) {
     .Call('ludic_loglikratioC_diff_arbitrary', PACKAGE = 'ludic', Bmat, Amat, d_max, cost)
 }
 
-#'Fast C++ computation of the final posterior probabilities
+#'Fast C++ computation of the final posterior probabilities in the E-M Winkler's method
 #'
 #'@param agreemat binary sparse matrix of dimensions \code{N x K} containing the agreement rows for each pair of potential matches.
 #'@param m vector of length \code{K} containing the agreement weights.
@@ -254,136 +134,27 @@ matchingScore_C <- function(agreemat, m, u, nA, nB) {
 }
 
 #'@rdname matchingScore_C
-#'@description matchingScore_C_sparse implements a version using spase matrices
-#'@export
-matchingScore_C_sparse <- function(agreemat, m, u, nA, nB) {
-    .Call('ludic_matchingScore_C_sparse', PACKAGE = 'ludic', agreemat, m, u, nA, nB)
-}
-
-#'@rdname matchingScore_C
 #'@param mat_A a \code{nB x K} matrix of the observations to be matched.
 #'@param mat_B a \code{nA x K} matrix of the database into which a match is looked for.
-#'@description matchingScore_C_sparse_big implements a version using spase matrices and has a better 
-#'management of memory but is alittle bit slower (indicated for big matrices)
+#'@description matchingScore_C_sparse_big implements a version using spase matrices. It has a better 
+#'management of memory but is a little bit slower (indicated for big matrices)
 #'@export
 matchingScore_C_sparse_big <- function(mat_A, mat_B, m, u) {
     .Call('ludic_matchingScore_C_sparse_big', PACKAGE = 'ludic', mat_A, mat_B, m, u)
 }
 
-#'Compute the probabilities for an observation to match other observations
+#'Compute the matching probabilities for each pair of observations
 #'
-#'C++ version: for a given observation of index id0 (in \code{1:n}), all the matching probabilities are computed
-#'for the other \code{p} observations.
+#'C++ version: for each observations in \code{(1:n)}, all the matching probabilities are computed
+#'for the \code{p} possible pairs.
 #'
-#'@param id0 the index for the reference observation in \code{1:n} to be match to p other observations
-#'@param computed_dist an \code{n x p} matrix of computed distances used for ranking.
-#'@param prop_match estimated proportion of match ("rho_1")
-#'@param yes_aggregate logical flag for wether the results are sorted according to the
-#'original probability or the aggregated probability. Default is \code{TRUE}.
-#'@param k0 number of top (highest) matching probabilities to return. 
-#'Default is 5.
+#'@param computed_dist a \code{n x p} matrix of computed distances used for ranking.
+#'@param prop_match a priori proportion of matches ("rho_1")
 #'
-#'@return a character vector of length \code{k0*4} containing for each k0
-#'potential match, inturn, the probability, the aggregated probability, the logLR 
-#'abd the corresponding potential matching ID.
+#'@return a \code{n x p} matrix containing the matching probabilities for each pair
 #'
 #'@export
 matchProbs_rank_full_C <- function(computed_dist, prop_match) {
     .Call('ludic_matchProbs_rank_full_C', PACKAGE = 'ludic', computed_dist, prop_match)
-}
-
-#' Splitting a character string in C++
-#' 
-#'@rdname strsplitC
-#'
-#'@description \code{strsplitC_memoryPbs} can have memory issues...
-#' 
-#'@examples
-#'strsplitC_memoryPbs(c(";aaa;bb ; cccc;ee;"), sep=";")
-#'@export
-strsplitC_memoryPbs <- function(s, sep) {
-    .Call('ludic_strsplitC_memoryPbs', PACKAGE = 'ludic', s, sep)
-}
-
-#'@rdname strsplitC 
-#'@description \code{strsplitC_safe} implementation is safer in its memory treatment
-#' 
-#'@examples
-#'strsplitC_safe(c(";aaa;bb ; cccc;ee;"), sep=";")
-#'strsplitC_safe(c(""), sep=";")
-#'strsplitC_safe(c("a"), sep=";")
-#'strsplitC_safe(c("bb ; ee"), sep=";")
-#'strsplitC_safe(c("bb ee"), sep=";")
-#'@export
-strsplitC_safe <- function(s, sep) {
-    .Call('ludic_strsplitC_safe', PACKAGE = 'ludic', s, sep)
-}
-
-#' Splitting a character string in C++
-#' 
-#'Splitting a subset of each character string from character 
-#'number \code{i} to character \code{l} on characters \code{";"}.
-#' 
-#'@param Adates a matrix of character strings to be subsetted and splitted
-#'
-#'@param i an integer indicating the begining of the subset of the strings
-#'
-#'@param l an integer indicating the end of the subset of the strings
-#' 
-#'@examples
-#'stringdate_test(matrix(c("20NOV2008:21NOV2008", 
-#'                         "20NOV2008:21NOV2008 ; 10APR2008:12APR2008", "", ""), 
-#'                       ncol=2, nrow=2), 1,0)
-#'
-#'@keywords internal                          
-#'                          
-#'@export
-stringdate_test <- function(Adates, i, l) {
-    .Call('ludic_stringdate_test', PACKAGE = 'ludic', Adates, i, l)
-}
-
-#' C++ function for comparing dates encoded as character stings
-#' 
-#'@param s1 a date as a character string
-#'
-#'@param s2 a second date as a character string
-#'
-#'@param fmt1 a fomat to read the date \code{s1}
-#'
-#'@param fmt2 a fomat to read the date \code{s2}
-#' 
-#'@return \code{TRUE} if \code{s1} precedes \code{s2}, \code{FALSE} otherwise.
-#' 
-#' @examples
-#'dateread("20NOV2008 ", "%d%B%Y")
-#'dateread(" JAN 10 2008", "%B %d% Y")
-#'dateread(" Jan 10 2008 12:00AM", " %B  %d %Y")>=dateread(" Jan 26 2008 12:00AM", " %B  %d %Y")
-#'datetest(" Nov 3 2008 12:00AM", "04NOV2008", " %B %d %Y", "%d%B%Y")
-#'datetest(" Nov 5 2008 12:00AM", "04NOV2008", " %B %d %Y", "%d%B%Y")
-#'
-#'
-#'@keywords internal
-#'
-#'@export
-datetest <- function(s1, s2, fmt1, fmt2) {
-    .Call('ludic_datetest', PACKAGE = 'ludic', s1, s2, fmt1, fmt2)
-}
-
-#' C++ function for reading dates from character stings
-#' 
-#'@param s a date as a character string
-#'
-#'@param fmt a fomat to read the date
-#'
-#'@examples
-#'dateread(" Nov 10 2008 12:00AM", "%B%d%Y")
-#'dateread(" Nov 10 2008 12:00AM", " %B  %d %Y")
-#'dateread(" Nov 10 2008 12:00AM", " %d %B %Y")
-#'
-#'@keywords internal
-#'
-#'@export
-dateread <- function(s, fmt) {
-    .Call('ludic_dateread', PACKAGE = 'ludic', s, fmt)
 }
 

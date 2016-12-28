@@ -22,26 +22,22 @@
 #'
 #'Grannis SJ, Overhage JM, Hui S, et al. Analysis of a probabilistic record linkage technique without human review. AMIA 2003 Symp Proc 2003: 259-63.
 #'
+#'
 #'@examples
-#'#mat1 <- matrix(round(rnorm(n=1000, sd=1.2)), ncol=10, nrow=100)
-#'#mat2 <- rbind(mat1[1:10, ],
-#'#              matrix(round(rnorm(n=900, sd=1.2)), ncol=10, nrow=90)
-#'#              )
-#'mat1 <- matrix(round(rnorm(n=1000, sd=12)), ncol=10, nrow=100)
+#'mat1 <- matrix(round(rnorm(n=1000, sd=1.2)), ncol=10, nrow=100)
 #'mat2 <- rbind(mat1[1:10, ],
-#'              matrix(round(rnorm(n=900, sd=12)), ncol=10, nrow=90)
+#'              matrix(round(rnorm(n=900, sd=1.2)), ncol=10, nrow=90)
 #'              )
 #'rownames(mat1) <- paste0("A", 1:nrow(mat1))
 #'rownames(mat1) <- paste0("B", 1:nrow(mat1))
 #'mat1 <- 1*(mat1>1)
 #'mat2 <- 1*(mat2>1)
-#'res <- em_winkler(mat1, mat2)
-#'res <- em_winkler(mat1, mat1)
-#'plot(density(as.vector(res$matchingScore)))
+#'em_winkler(mat1, mat2)
 #'
+#'@importFrom Matrix Matrix
 #'
 #'@export
-em_winkler<-function(data1, data2, tol=0.01, maxit=15, do_plot=TRUE, verbose=FALSE){#}, sens_thres=0.99, spec_thres=0.99){
+em_winkler<-function(data1, data2, tol=0.001, maxit=500, do_plot=TRUE, verbose=FALSE){#}, sens_thres=0.99, spec_thres=0.99){
   
   stopifnot(class(data1)=="matrix")
   stopifnot(class(data2)=="matrix")
@@ -70,11 +66,11 @@ em_winkler<-function(data1, data2, tol=0.01, maxit=15, do_plot=TRUE, verbose=FAL
   
   #EM algorithm
   #initialization
-  p <- 0.01 
-  m <- rep(0.95, K)
-  u <- rep(0.05, K)
+  p <- 0.5 
+  m <- rep(0.9, K)
+  u <- rep(0.1, K)
   
-  #ag_score_neg <- Matrix::Matrix(1-ag_score, sparse=TRUE)
+  ag_score_neg <- Matrix::Matrix(1-ag_score, sparse=TRUE)
   for(i in 1:maxit){
     cat("it:", i, "\n")
     p_old <- p
@@ -83,36 +79,32 @@ em_winkler<-function(data1, data2, tol=0.01, maxit=15, do_plot=TRUE, verbose=FAL
     
     # E step
     # temp <- estep_C_vect_sparse(ag_score, p=p, m=m, u=u) # estep_C_vect(ag_score, p=p, m=m, u=u) # estep_vect(ag_score, p=p, m=m, u=u)
-    temp_log <- estep_C_vect(ag_score, p=p, m=m, u=u, Log=TRUE)
-    g_m_log <- temp_log[, 1]
-    g_u_log <- temp_log[, 2]
-    #rm(temp_log)
+    temp <- estep_C_vect(ag_score, p=p, m=m, u=u)
+    g_m <- temp[, 1]
+    g_u <- temp[, 2]
     # M step
-    g_m_log_max <- max(g_m_log)
-    g_u_log_max <- max(g_u_log)
-    gm_summed_log <- g_m_log_max + log(sum(exp(g_m_log - g_m_log_max)))
-    gu_summed_log <- g_u_log_max + log(sum(exp(g_u_log - g_u_log_max)))
-    p <- exp(gm_summed_log - log(N))
-    m <- (exp(g_m_log - gm_summed_log)%*%ag_score)[1,]
-    u <- (exp(g_u_log - gu_summed_log)%*%ag_score)[1,]
+    gm_summed <- sum(g_m)
+    p <- gm_summed/N
+    m <- (g_m%*%ag_score/gm_summed)[1,]
+    u <- (g_u%*%ag_score/sum(g_u))[1,]
     
-    if(length(which(m > (1-tol)))>0){
-      m[which(m > (1-tol))] <- (1-tol)
+    if(length(which(m>0.99999))>0){
+      m[which(m>0.99999)] <- 0.99999
     }
-    if(length(which(m < tol))>0){
-      m[which(m < tol)] <- tol
+    if(length(which(m<0.00001))>0){
+      m[which(m<0.00001)] <- 0.00001
     }
-    if(length(which(u > (1-tol)))>0){
-      u[which(u > (1-tol))] <- (1-tol)
+    if(length(which(u>0.99999))>0){
+      u[which(u>0.99999)] <- 0.99999
     }
-    if(length(which(u < tol))>0){
-      u[which(u < tol)] <- tol
+    if(length(which(u<0.00001))>0){
+      u[which(u<0.00001)] <- 0.00001
     }
-    if(length(which(p > (1-tol)))>0){
-      p[which(p > (1-tol))] <- (1-tol)
+    if(length(which(p>0.99999))>0){
+      p[which(p>0.99999)] <- 0.99999
     }
-    if(length(which(p < tol))>0){
-      p[which(p < tol)] <- tol
+    if(length(which(p<0.00001))>0){
+      p[which(p<0.00001)] <- 0.00001
     }
     
     if(verbose){
@@ -138,7 +130,7 @@ em_winkler<-function(data1, data2, tol=0.01, maxit=15, do_plot=TRUE, verbose=FAL
   if(i==maxit){
     conv_flag <- 2
   }
-  cat("EM finished in", i, "iterations.\n p:", p,"\n\n")
+  cat("EM finished.\n\n")
   
   # Final matching score
   ms <- matchingScore_C(ag_score, m, u, nA=n1, nB=n2)   #ms_temp <- apply(ag_score, 1, matching_score, m, u)
@@ -175,14 +167,15 @@ em_winkler<-function(data1, data2, tol=0.01, maxit=15, do_plot=TRUE, verbose=FAL
 
 
 
-#'Implementation of Winkler's EM algorithm or Fellegi-Sunter matching method when the data are too 
-#'big to compute the agreement matrix.
+#'@description \code{em_winkler_big} implements the same method when the data are too big to compute 
+#'the agreement matrix. Agreement is then recomputed on the fly each time it is needed. The EM steps 
+#'are completely done in C++. This decreases the RAM usage (still important though), at the cost of 
+#'increasing computationnal time.
 #'
-#'Agreement is recomputed on the fly each time it is needed. The EM steps are completely done in C++
-#'This decreases the RAM usage (still important though), at the cost of increasing computationnal time.
+#'@rdname em_winkler
 #'
 #'@export
-em_winkler_big<-function(data1, data2, tol=0.01, maxit=50, do_plot=TRUE, verbose=FALSE){#}, sens_thres=0.99, spec_thres=0.99){
+em_winkler_big<-function(data1, data2, tol=0.001, maxit=500, do_plot=TRUE, verbose=FALSE){#}, sens_thres=0.99, spec_thres=0.99){
   
   stopifnot(class(data1)=="matrix")
   stopifnot(class(data2)=="matrix")
@@ -221,23 +214,23 @@ em_winkler_big<-function(data1, data2, tol=0.01, maxit=50, do_plot=TRUE, verbose
     u <- EM_res[["u"]]
 
     
-    if(length(which(m > (1-tol)))>0){
-      m[which(m > (1-tol))] <- (1-tol)
+    if(length(which(m>0.99999))>0){
+      m[which(m>0.99999)] <- 0.99999
     }
-    if(length(which(m < tol))>0){
-      m[which(m < tol)] <- tol
+    if(length(which(m<0.00001))>0){
+      m[which(m<0.00001)] <- 0.00001
     }
-    if(length(which(u > (1-tol)))>0){
-      u[which(u > (1-tol))] <- (1-tol)
+    if(length(which(u>0.99999))>0){
+      u[which(u>0.99999)] <- 0.99999
     }
-    if(length(which(u < tol))>0){
-      u[which(u < tol)] <- tol
+    if(length(which(u<0.00001))>0){
+      u[which(u<0.00001)] <- 0.00001
     }
-    if(length(which(p > (1-tol)))>0){
-      p[which(p > (1-tol))] <- (1-tol)
+    if(length(which(p>0.99999))>0){
+      p[which(p>0.99999)] <- 0.99999
     }
-    if(length(which(p < tol))>0){
-      p[which(p < tol)] <- tol
+    if(length(which(p<0.00001))>0){
+      p[which(p<0.00001)] <- 0.00001
     }
     
     if(verbose){
@@ -263,7 +256,7 @@ em_winkler_big<-function(data1, data2, tol=0.01, maxit=50, do_plot=TRUE, verbose
   if(i==maxit){
     conv_flag <- 2
   }
-  cat("EM finished.\n p:", p,"\n\n")
+  cat("EM finished.\n\n")
   
   # Final matching score
   ms <- matchingScore_C_sparse_big(data1, data2, m, u)   #ms_temp <- apply(ag_score, 1, matching_score, m, u)
@@ -282,14 +275,16 @@ em_winkler_big<-function(data1, data2, tol=0.01, maxit=50, do_plot=TRUE, verbose
 
 
 
-#' #'@keywords internal
+#'Computes a matching score from aggrement vectors and weights
+#'@keywords internal
+#'@examples 
 #' estep_vect <- function(ag_score, p, m, u){
 #'   a <-exp(log(p) + ag_score%*%log(m) + (1-ag_score)%*%log(1-m))
 #'   b <- exp(log(1-p) + ag_score%*%log(u) + (1-ag_score)%*%log(1-u))
 #'   return(cbind(a/(a+b), b/(a+b)))
 #' }
 #' 
-#' #'@keywords internal
+#'
 matching_score <- function(agree, m, u){
   sum((log(m)-log(u))^agree*(log(1-m)-log(1-u))^(1-agree))
 }

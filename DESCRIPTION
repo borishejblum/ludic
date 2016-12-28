@@ -1,8 +1,8 @@
 Package: ludic
 Type: Package
 Title: Linkage Using Diagnosis Codes
-Version: 0.1.0
-Date: 2016-08-23
+Version: 0.1.1
+Date: 2016-12-16
 Author: Boris Hejblum, Tianxi Cai
 Maintainer: Boris Hejblum <bhejblum@hsph.harvard.edu>
 LinkingTo: Rcpp, RcppArmadillo
@@ -13,7 +13,9 @@ Imports:
     sn,
     Rcpp (>= 0.12.2),
     landpred, 
-    mvnfast
+    mvnfast,
+    Matrix,
+    stats
 Description: Probabilistic record linkage without direct identifiers using only diagnosis codes.
 License: MIT + file LICENSE
 RoxygenNote: 5.0.1
