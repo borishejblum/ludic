@@ -9,7 +9,6 @@ LinkingTo: Rcpp, RcppArmadillo
 Imports:
     fGarch,
     mclust,
-    EMMIXuskew,
     sn,
     Rcpp (>= 0.12.2),
     landpred, 
