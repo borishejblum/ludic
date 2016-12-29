@@ -1,0 +1,17 @@
+citHeader("To cite tcgsaseq in publications, please use:")
+
+citEntry(entry = "Article",
+   title  = "Probabilistic Record Linkage of De-Identified Research Datasets Using Diagnosis Codes",
+   author = c(person("Boris P Hejblum"), person("Griffin Weber"), person("Katherine P Liao"),  person("Nathan Palmer"),  person("Susanne Churchill"),  person("Peter Szolovits"), person("Shawn Murphy"), person("Isaac Kohane"), person("Tianxi Cai")),
+   journal = "submitted",
+   year   = "2016",
+   volume = "",
+   number = "",
+   pages  = "",
+   doi    = "",
+   url    = "",
+   note   = "R package version 0.1.4",
+   textVersion = "Hejblum BP, Weber G, Liao KP, Palmer N, Churchill S, Szolovits P, Murphy S, Kohane I, Cai T (2016) Probabilistic Record Linkage of De-Identified Research Datasets Using Diagnosis Codes. Submitted."
+)
+
+citFooter("We have invested a lot of time and effort in implementing ludic, ", "please cite it when using it for data analysis, research or any other purpose.")

@@ -41,6 +41,8 @@
 #'
 #@param eps_inf discrepancy rate for the differentiable variables
 #'
+#'@references Hejblum BP, Weber G, Liao KP, Palmer N, Churchill S, Szolovits P, Murphy S, Kohane I, Cai T 
+#'Probabilistic Record Linkage of De-Identified Research Datasets Using Diagnosis Codes, \emph{submitted}, 2016.
 #'
 #'@importFrom landpred VTM
 #'@importFrom fGarch dsstd sstdFit
@@ -60,7 +62,8 @@
 #'rownames(data2_ex) <- paste0("ID", c(1:(npat/10), (npat/2+npat/10 + 1):npat), "_data2")
 #'
 #'\dontrun{
-#'res <- recordLink(data1 = data1_ex, data2 = data2_ex, use_diff=FALSE, eps_minus = 0.01, eps_plus = 0.01)
+#'res <- recordLink(data1 = data1_ex, data2 = data2_ex, 
+#'                  use_diff = FALSE, eps_minus = 0.01, eps_plus = 0.01)
 #'round(res[c(1:3, 20:23), c(1:3, 20:23)], 3)
 #'}
 #'
