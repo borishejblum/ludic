@@ -1,7 +1,7 @@
 Package: ludic
 Type: Package
 Title: Linkage Using Diagnosis Codes
-Version: 0.1.4
+Version: 0.1.5
 Date: 2016-12-29
 Author: Boris Hejblum, Tianxi Cai
 Maintainer: Boris Hejblum <bhejblum@hsph.harvard.edu>
