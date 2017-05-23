@@ -15,7 +15,7 @@ codes only, in the absence of direct identifiers .
 \tabular{ll}{
 Package: \tab ludic\cr
 Type: \tab Package\cr
-Version: \tab ludic 0.1.4\cr
+Version: \tab ludic 0.1.5\cr
 Date: \tab 2016-12-29\cr
 License: \tab \href{https://cran.r-project.org/web/licenses/MIT}{The "MIT License" (MIT)}\cr
 }
