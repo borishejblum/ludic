@@ -27,3 +27,5 @@ Or to get the development version from [GitHub](https://github.com/borishejblum/
 #install.packages("devtools")
 devtools::install_github("borishejblum/ludic")
 ```
+
+-- Boris Hejblum
