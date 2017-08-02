@@ -3,7 +3,7 @@
 `ludic`
 =======
 
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/ludic)](https://cran.r-project.org/package=ludic) [![Travis-CI Build Status](https://travis-ci.org/borishejblum/ludic.svg?branch=master)](https://travis-ci.org/borishejblum/ludic)
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/ludic)](https://cran.r-project.org/package=ludic) [![Travis-CI Build Status](https://travis-ci.org/borishejblum/ludic.svg?branch=master)](https://travis-ci.org/borishejblum/ludic) [![Downloads](https://cranlogs.r-pkg.org/badges/ludic?color=blue)](https://www.r-pkg.org/pkg/ludic)
 
 Overview
 --------
