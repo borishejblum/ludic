@@ -2,8 +2,8 @@
 % Please edit documentation in R/ludic-package.R
 \docType{package}
 \name{ludic-package}
-\alias{ludic}
 \alias{ludic-package}
+\alias{ludic}
 \title{ludic}
 \description{
 Linkage Using Diagnosis Codes
@@ -21,12 +21,11 @@ License: \tab \href{https://cran.r-project.org/web/licenses/MIT}{The "MIT Licens
 }
 The main function of \code{ludic} is \link{recordLink}.
 }
-\author{
-Boris P. Hejblum, Tianxi Cai
---- Maintainer: Boris P. Hejblum
-}
 \references{
 Hejblum BP, Weber G, Liao KP, Palmer N, Churchill S, Szolovits P, Murphy S, Kohane I, Cai T 
 Probabilistic Record Linkage of De-Identified Research Datasets Using Diagnosis Codes, \emph{submitted}, 2016.
 }
-
+\author{
+Boris P. Hejblum, Tianxi Cai
+--- Maintainer: Boris P. Hejblum
+}

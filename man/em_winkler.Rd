@@ -54,4 +54,3 @@ Winkler WE. Using the EM Algorithm for Weight Computation in the Fellegi-Sunter 
 
 Grannis SJ, Overhage JM, Hui S, et al. Analysis of a probabilistic record linkage technique without human review. AMIA 2003 Symp Proc 2003: 259-63.
 }
-

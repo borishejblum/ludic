@@ -48,4 +48,3 @@ variables with dates
 Fast C++ implementation of the log-likelihood ratio computation for 
 differentiating variables
 }
-

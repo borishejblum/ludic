@@ -10,4 +10,3 @@ estep_C_vect(agreemat, p, m, u)
 Fast C++ implementation of Winkler's Method E step
 }
 \keyword{internal}
-

@@ -18,4 +18,3 @@ a \code{n x p} matrix containing the matching probabilities for each pair
 C++ version: for each observations in \code{(1:n)}, all the matching probabilities are computed
 for the \code{p} possible pairs.
 }
-

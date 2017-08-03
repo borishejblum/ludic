@@ -12,4 +12,3 @@ C++ implementation of the E and M steps from Winkler's EM algorithm estimating F
 using sparse matrices for big sample sizes
 }
 \keyword{internal}
-

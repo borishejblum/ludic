@@ -18,4 +18,3 @@ Splitting a character string in C++
 strsplitC(c(";aaa;bb;cccc;ee;"), sep=";")
 }
 \keyword{internal}
-

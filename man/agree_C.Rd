@@ -3,6 +3,7 @@
 \name{agree_C}
 \alias{agree_C}
 \alias{agree_C_sparse}
+\alias{agree_C_sparse}
 \title{Fast C++ implementation of agreement vector for the element-wise comparison of 2 matrices}
 \usage{
 agree_C(mat_A, mat_B)
@@ -30,4 +31,3 @@ mat1 <- 1*(mat1>1)
 mat2 <- 1*(mat2>1)
 
 }
-

@@ -15,4 +15,4 @@ Imports:
     Matrix
 Description: Probabilistic record linkage without direct identifiers using only diagnosis codes.
 License: MIT + file LICENSE
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
