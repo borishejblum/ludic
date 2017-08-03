@@ -21,7 +21,7 @@
 #'
 #'@export
 agree_C <- function(mat_A, mat_B) {
-    .Call('ludic_agree_C', PACKAGE = 'ludic', mat_A, mat_B)
+    .Call(`_ludic_agree_C`, mat_A, mat_B)
 }
 
 #'@rdname agree_C
@@ -30,14 +30,14 @@ agree_C <- function(mat_A, mat_B) {
 #'
 #'@export
 agree_C_sparse <- function(mat_A, mat_B) {
-    .Call('ludic_agree_C_sparse', PACKAGE = 'ludic', mat_A, mat_B)
+    .Call(`_ludic_agree_C_sparse`, mat_A, mat_B)
 }
 
 #'Fast C++ implementation of Winkler's Method E step
 #'
 #'@keywords internal
 estep_C_vect <- function(agreemat, p, m, u) {
-    .Call('ludic_estep_C_vect', PACKAGE = 'ludic', agreemat, p, m, u)
+    .Call(`_ludic_estep_C_vect`, agreemat, p, m, u)
 }
 
 #'C++ implementation of the E and M steps from Winkler's EM algorithm estimating FS method 
@@ -45,7 +45,7 @@ estep_C_vect <- function(agreemat, p, m, u) {
 #'
 #'@keywords internal
 EMstep_C_sparse_big <- function(mat_A, mat_B, p, m, u) {
-    .Call('ludic_EMstep_C_sparse_big', PACKAGE = 'ludic', mat_A, mat_B, p, m, u)
+    .Call(`_ludic_EMstep_C_sparse_big`, mat_A, mat_B, p, m, u)
 }
 
 #'C++ implementation of the pseudo-likelihood computation 
@@ -73,7 +73,7 @@ EMstep_C_sparse_big <- function(mat_A, mat_B, p, m, u) {
 #'
 #'@export
 loglikC_bin <- function(Bmat, Amat, eps_p, eps_n, piA, piB) {
-    .Call('ludic_loglikC_bin', PACKAGE = 'ludic', Bmat, Amat, eps_p, eps_n, piA, piB)
+    .Call(`_ludic_loglikC_bin`, Bmat, Amat, eps_p, eps_n, piA, piB)
 }
 
 #'Splitting a character string in C++
@@ -88,7 +88,7 @@ loglikC_bin <- function(Bmat, Amat, eps_p, eps_n, piA, piB) {
 #'strsplitC(c(";aaa;bb;cccc;ee;"), sep=";")
 #'@export
 strsplitC <- function(s, sep) {
-    .Call('ludic_strsplitC', PACKAGE = 'ludic', s, sep)
+    .Call(`_ludic_strsplitC`, s, sep)
 }
 
 #'@rdname loglikC_bin
@@ -102,7 +102,7 @@ strsplitC <- function(s, sep) {
 #'
 #'@export
 loglikC_bin_wDates <- function(Bmat, Amat, Bdates, Adates, eps_p, eps_n, piA, piB) {
-    .Call('ludic_loglikC_bin_wDates', PACKAGE = 'ludic', Bmat, Amat, Bdates, Adates, eps_p, eps_n, piA, piB)
+    .Call(`_ludic_loglikC_bin_wDates`, Bmat, Amat, Bdates, Adates, eps_p, eps_n, piA, piB)
 }
 
 #'Fast C++ implementation of the log-likelihood ratio computation for 
@@ -117,7 +117,7 @@ loglikC_bin_wDates <- function(Bmat, Amat, Bdates, Adates, eps_p, eps_n, piA, pi
 #'
 #'@export
 loglikratioC_diff_arbitrary <- function(Bmat, Amat, d_max, cost) {
-    .Call('ludic_loglikratioC_diff_arbitrary', PACKAGE = 'ludic', Bmat, Amat, d_max, cost)
+    .Call(`_ludic_loglikratioC_diff_arbitrary`, Bmat, Amat, d_max, cost)
 }
 
 #'Fast C++ computation of the final posterior probabilities in the E-M Winkler's method
@@ -130,7 +130,7 @@ loglikratioC_diff_arbitrary <- function(Bmat, Amat, d_max, cost) {
 #'
 #'@export
 matchingScore_C <- function(agreemat, m, u, nA, nB) {
-    .Call('ludic_matchingScore_C', PACKAGE = 'ludic', agreemat, m, u, nA, nB)
+    .Call(`_ludic_matchingScore_C`, agreemat, m, u, nA, nB)
 }
 
 #'@rdname matchingScore_C
@@ -140,7 +140,7 @@ matchingScore_C <- function(agreemat, m, u, nA, nB) {
 #'management of memory but is a little bit slower (indicated for big matrices)
 #'@export
 matchingScore_C_sparse_big <- function(mat_A, mat_B, m, u) {
-    .Call('ludic_matchingScore_C_sparse_big', PACKAGE = 'ludic', mat_A, mat_B, m, u)
+    .Call(`_ludic_matchingScore_C_sparse_big`, mat_A, mat_B, m, u)
 }
 
 #'Compute the matching probabilities for each pair of observations
@@ -155,6 +155,6 @@ matchingScore_C_sparse_big <- function(mat_A, mat_B, m, u) {
 #'
 #'@export
 matchProbs_rank_full_C <- function(computed_dist, prop_match) {
-    .Call('ludic_matchProbs_rank_full_C', PACKAGE = 'ludic', computed_dist, prop_match)
+    .Call(`_ludic_matchProbs_rank_full_C`, computed_dist, prop_match)
 }
 

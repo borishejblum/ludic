@@ -24,7 +24,7 @@
 #' @name ludic-package
 #' @aliases ludic
 #' 
-#' @useDynLib ludic
-#' @importFrom Rcpp sourceCpp
+#' @useDynLib ludic, .registration = TRUE
+#' @importFrom Rcpp evalCpp
 #' 
 NULL

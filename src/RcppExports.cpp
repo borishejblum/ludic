@@ -8,7 +8,7 @@ using namespace Rcpp;
 
 // agree_C
 arma::mat agree_C(arma::mat mat_A, arma::mat mat_B);
-RcppExport SEXP ludic_agree_C(SEXP mat_ASEXP, SEXP mat_BSEXP) {
+RcppExport SEXP _ludic_agree_C(SEXP mat_ASEXP, SEXP mat_BSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -20,7 +20,7 @@ END_RCPP
 }
 // agree_C_sparse
 arma::sp_mat agree_C_sparse(arma::mat mat_A, arma::mat mat_B);
-RcppExport SEXP ludic_agree_C_sparse(SEXP mat_ASEXP, SEXP mat_BSEXP) {
+RcppExport SEXP _ludic_agree_C_sparse(SEXP mat_ASEXP, SEXP mat_BSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -32,7 +32,7 @@ END_RCPP
 }
 // estep_C_vect
 arma::mat estep_C_vect(arma::mat agreemat, double p, arma::colvec m, arma::colvec u);
-RcppExport SEXP ludic_estep_C_vect(SEXP agreematSEXP, SEXP pSEXP, SEXP mSEXP, SEXP uSEXP) {
+RcppExport SEXP _ludic_estep_C_vect(SEXP agreematSEXP, SEXP pSEXP, SEXP mSEXP, SEXP uSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -46,7 +46,7 @@ END_RCPP
 }
 // EMstep_C_sparse_big
 List EMstep_C_sparse_big(arma::mat mat_A, arma::mat mat_B, double p, arma::rowvec m, arma::rowvec u);
-RcppExport SEXP ludic_EMstep_C_sparse_big(SEXP mat_ASEXP, SEXP mat_BSEXP, SEXP pSEXP, SEXP mSEXP, SEXP uSEXP) {
+RcppExport SEXP _ludic_EMstep_C_sparse_big(SEXP mat_ASEXP, SEXP mat_BSEXP, SEXP pSEXP, SEXP mSEXP, SEXP uSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -61,7 +61,7 @@ END_RCPP
 }
 // loglikC_bin
 NumericMatrix loglikC_bin(arma::mat Bmat, arma::mat Amat, NumericVector eps_p, NumericVector eps_n, NumericVector piA, NumericVector piB);
-RcppExport SEXP ludic_loglikC_bin(SEXP BmatSEXP, SEXP AmatSEXP, SEXP eps_pSEXP, SEXP eps_nSEXP, SEXP piASEXP, SEXP piBSEXP) {
+RcppExport SEXP _ludic_loglikC_bin(SEXP BmatSEXP, SEXP AmatSEXP, SEXP eps_pSEXP, SEXP eps_nSEXP, SEXP piASEXP, SEXP piBSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -77,7 +77,7 @@ END_RCPP
 }
 // strsplitC
 std::vector<std::string> strsplitC(std::string s, char sep);
-RcppExport SEXP ludic_strsplitC(SEXP sSEXP, SEXP sepSEXP) {
+RcppExport SEXP _ludic_strsplitC(SEXP sSEXP, SEXP sepSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -89,7 +89,7 @@ END_RCPP
 }
 // loglikC_bin_wDates
 NumericMatrix loglikC_bin_wDates(arma::mat Bmat, arma::mat Amat, StringMatrix Bdates, StringMatrix Adates, NumericVector eps_p, NumericVector eps_n, NumericVector piA, NumericVector piB);
-RcppExport SEXP ludic_loglikC_bin_wDates(SEXP BmatSEXP, SEXP AmatSEXP, SEXP BdatesSEXP, SEXP AdatesSEXP, SEXP eps_pSEXP, SEXP eps_nSEXP, SEXP piASEXP, SEXP piBSEXP) {
+RcppExport SEXP _ludic_loglikC_bin_wDates(SEXP BmatSEXP, SEXP AmatSEXP, SEXP BdatesSEXP, SEXP AdatesSEXP, SEXP eps_pSEXP, SEXP eps_nSEXP, SEXP piASEXP, SEXP piBSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -107,7 +107,7 @@ END_RCPP
 }
 // loglikratioC_diff_arbitrary
 NumericMatrix loglikratioC_diff_arbitrary(arma::mat Bmat, arma::mat Amat, NumericVector d_max, NumericVector cost);
-RcppExport SEXP ludic_loglikratioC_diff_arbitrary(SEXP BmatSEXP, SEXP AmatSEXP, SEXP d_maxSEXP, SEXP costSEXP) {
+RcppExport SEXP _ludic_loglikratioC_diff_arbitrary(SEXP BmatSEXP, SEXP AmatSEXP, SEXP d_maxSEXP, SEXP costSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -121,7 +121,7 @@ END_RCPP
 }
 // matchingScore_C
 arma::mat matchingScore_C(arma::mat agreemat, arma::vec m, arma::vec u, int nA, int nB);
-RcppExport SEXP ludic_matchingScore_C(SEXP agreematSEXP, SEXP mSEXP, SEXP uSEXP, SEXP nASEXP, SEXP nBSEXP) {
+RcppExport SEXP _ludic_matchingScore_C(SEXP agreematSEXP, SEXP mSEXP, SEXP uSEXP, SEXP nASEXP, SEXP nBSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -136,7 +136,7 @@ END_RCPP
 }
 // matchingScore_C_sparse_big
 arma::mat matchingScore_C_sparse_big(arma::mat mat_A, arma::mat mat_B, arma::vec m, arma::vec u);
-RcppExport SEXP ludic_matchingScore_C_sparse_big(SEXP mat_ASEXP, SEXP mat_BSEXP, SEXP mSEXP, SEXP uSEXP) {
+RcppExport SEXP _ludic_matchingScore_C_sparse_big(SEXP mat_ASEXP, SEXP mat_BSEXP, SEXP mSEXP, SEXP uSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -150,7 +150,7 @@ END_RCPP
 }
 // matchProbs_rank_full_C
 NumericMatrix matchProbs_rank_full_C(NumericMatrix computed_dist, double prop_match);
-RcppExport SEXP ludic_matchProbs_rank_full_C(SEXP computed_distSEXP, SEXP prop_matchSEXP) {
+RcppExport SEXP _ludic_matchProbs_rank_full_C(SEXP computed_distSEXP, SEXP prop_matchSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -159,4 +159,24 @@ BEGIN_RCPP
     rcpp_result_gen = Rcpp::wrap(matchProbs_rank_full_C(computed_dist, prop_match));
     return rcpp_result_gen;
 END_RCPP
+}
+
+static const R_CallMethodDef CallEntries[] = {
+    {"_ludic_agree_C", (DL_FUNC) &_ludic_agree_C, 2},
+    {"_ludic_agree_C_sparse", (DL_FUNC) &_ludic_agree_C_sparse, 2},
+    {"_ludic_estep_C_vect", (DL_FUNC) &_ludic_estep_C_vect, 4},
+    {"_ludic_EMstep_C_sparse_big", (DL_FUNC) &_ludic_EMstep_C_sparse_big, 5},
+    {"_ludic_loglikC_bin", (DL_FUNC) &_ludic_loglikC_bin, 6},
+    {"_ludic_strsplitC", (DL_FUNC) &_ludic_strsplitC, 2},
+    {"_ludic_loglikC_bin_wDates", (DL_FUNC) &_ludic_loglikC_bin_wDates, 8},
+    {"_ludic_loglikratioC_diff_arbitrary", (DL_FUNC) &_ludic_loglikratioC_diff_arbitrary, 4},
+    {"_ludic_matchingScore_C", (DL_FUNC) &_ludic_matchingScore_C, 5},
+    {"_ludic_matchingScore_C_sparse_big", (DL_FUNC) &_ludic_matchingScore_C_sparse_big, 4},
+    {"_ludic_matchProbs_rank_full_C", (DL_FUNC) &_ludic_matchProbs_rank_full_C, 2},
+    {NULL, NULL, 0}
+};
+
+RcppExport void R_init_ludic(DllInfo *dll) {
+    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
+    R_useDynamicSymbols(dll, FALSE);
 }
