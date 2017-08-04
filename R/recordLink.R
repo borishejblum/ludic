@@ -16,7 +16,7 @@
 #'
 #'@param eps_minus discrepancy rate between \code{data2} and \code{data1}
 #'
-#'@param aggreg_2ways a charatcer string indicating how to merge the posterior two 
+#'@param aggreg_2ways a character string indicating how to merge the posterior two 
 #'probability matrices obtained for each of the 2 databases. Four possibility are 
 #'currently implemented: \code{"maxnorm"}, \code{"max"}, \code{"min"}, \code{"mean"} 
 #'and \code{"prod"}. Default is \code{"mean"}.
@@ -25,9 +25,9 @@
 #'Default is 1\%.
 #'
 #'@param d_max a numeric vector of length \code{K} giving the minimum difference 
-#'from which it is considered a discrepency.
+#'from which it is considered a discrepancy.
 #'
-#'@param use_diff logical flag indicating whether continuous diffenrentiable variables should be used in the 
+#'@param use_diff logical flag indicating whether continuous differentiable variables should be used in the 
 #'
 #'@param dates1 matrix or dataframe of dimension \code{nA x K} including the concatenated dates intervals for each corresponding 
 #'diagnosis codes in \code{data1}. Default is \code{NULL} in which case dates are not used.

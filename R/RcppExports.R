@@ -109,9 +109,9 @@ loglikC_bin_wDates <- function(Bmat, Amat, Bdates, Adates, eps_p, eps_n, piA, pi
 #'differentiating variables
 #'
 #'@param d_max a numeric vector of length \code{K} giving the minimum difference 
-#'from which it is considered a discrepency.
+#'from which it is considered a discrepancy.
 #'
-#'@param cost a numeric vector of length \code{K} giving the arbitrary cost of discrepency.
+#'@param cost a numeric vector of length \code{K} giving the arbitrary cost of discrepancy.
 #'
 #'@rdname loglikC_bin
 #'
@@ -151,7 +151,7 @@ matchingScore_C <- function(agreemat, m, u, nA, nB) {
 #'@rdname matchingScore_C
 #'@param mat_A a \code{nB x K} matrix of the observations to be matched.
 #'@param mat_B a \code{nA x K} matrix of the database into which a match is looked for.
-#'@description matchingScore_C_sparse_big implements a version using spase matrices. It has a better 
+#'@description \code{matchingScore_C_sparse_big} implements a version using sparse matrices. It has a better 
 #'management of memory but is a little bit slower (indicated for big matrices)
 #'@export
 matchingScore_C_sparse_big <- function(mat_A, mat_B, m, u) {

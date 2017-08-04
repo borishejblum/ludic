@@ -253,9 +253,9 @@ NumericMatrix loglikC_bin_wDates(arma::mat Bmat,
 //'differentiating variables
 //'
 //'@param d_max a numeric vector of length \code{K} giving the minimum difference 
-//'from which it is considered a discrepency.
+//'from which it is considered a discrepancy.
 //'
-//'@param cost a numeric vector of length \code{K} giving the arbitrary cost of discrepency.
+//'@param cost a numeric vector of length \code{K} giving the arbitrary cost of discrepancy.
 //'
 //'@rdname loglikC_bin
 //'

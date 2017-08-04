@@ -47,7 +47,7 @@ arma::mat matchingScore_C(arma::mat agreemat, arma::vec m, arma::vec u, int nA, 
 //'@rdname matchingScore_C
 //'@param mat_A a \code{nB x K} matrix of the observations to be matched.
 //'@param mat_B a \code{nA x K} matrix of the database into which a match is looked for.
-//'@description matchingScore_C_sparse_big implements a version using spase matrices. It has a better 
+//'@description \code{matchingScore_C_sparse_big} implements a version using sparse matrices. It has a better 
 //'management of memory but is a little bit slower (indicated for big matrices)
 //'@export
 // [[Rcpp::export]]

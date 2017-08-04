@@ -34,9 +34,9 @@ observing each variable in B.}
 \item{Adates}{\code{nA x K} matrix of the dates for database into which a match is looked for.}
 
 \item{d_max}{a numeric vector of length \code{K} giving the minimum difference 
-from which it is considered a discrepency.}
+from which it is considered a discrepancy.}
 
-\item{cost}{a numeric vector of length \code{K} giving the arbitrary cost of discrepency.}
+\item{cost}{a numeric vector of length \code{K} giving the arbitrary cost of discrepancy.}
 }
 \description{
 \code{loglikC_bin} implements an even faster C++ implementation of the pseudo-likelihood computation for binary

@@ -23,7 +23,7 @@ diagnosis codes in \code{data2}. Default is \code{NULL} in which case dates are 
 
 \item{eps_minus}{discrepancy rate between \code{data2} and \code{data1}}
 
-\item{aggreg_2ways}{a charatcer string indicating how to merge the posterior two 
+\item{aggreg_2ways}{a character string indicating how to merge the posterior two 
 probability matrices obtained for each of the 2 databases. Four possibility are 
 currently implemented: \code{"maxnorm"}, \code{"max"}, \code{"min"}, \code{"mean"} 
 and \code{"prod"}. Default is \code{"mean"}.}
@@ -40,9 +40,9 @@ such as age, for which the similarity measure uses the difference with
 \code{data2_cont1diff}, whose rownames are . Default is \code{NULL}.}
 
 \item{d_max}{a numeric vector of length \code{K} giving the minimum difference 
-from which it is considered a discrepency.}
+from which it is considered a discrepancy.}
 
-\item{use_diff}{logical flag indicating whether continuous diffenrentiable variables should be used in the}
+\item{use_diff}{logical flag indicating whether continuous differentiable variables should be used in the}
 }
 \value{
 the posterior probability of matching matrix

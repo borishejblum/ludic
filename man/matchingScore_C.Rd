@@ -27,6 +27,6 @@ matchingScore_C_sparse_big(mat_A, mat_B, m, u)
 \description{
 Fast C++ computation of the final posterior probabilities in the E-M Winkler's method
 
-matchingScore_C_sparse_big implements a version using spase matrices. It has a better 
+\code{matchingScore_C_sparse_big} implements a version using sparse matrices. It has a better 
 management of memory but is a little bit slower (indicated for big matrices)
 }

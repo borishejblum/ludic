@@ -1,4 +1,4 @@
-#'Implementation of Winkler's EM algorithmf or Fellegi-Sunter matching method
+#'Implementation of Winkler's EM algorithm for Fellegi-Sunter matching method
 #'
 #'@param data1 either a binary matrix or dataframe whose rownames are .
 #'
@@ -11,16 +11,16 @@
 #'@param do_plot a logical flag indicating whether a plot should be drawn for the EM convergence. 
 #'Default is \code{TRUE}
 #'
-#'@param verbose a logical flag indicating wehther intermediate values from the EM algorithm should 
+#'@param verbose a logical flag indicating whether intermediate values from the EM algorithm should 
 #'be printed. Useful for debugging. Default is \code{FALSE}. 
 #'
 #'
 #'@return a matrix of size \code{n1 x n2} with the matching score for each \code{n1*n2} pair.
 #'
 #'@references
-#'Winkler WE. Using the EM Algorithm for Weight Computation in the Fellegi-Sunter Model of Record Linkage. Proc Sect Surv Res Methods, Am Stat Assoc 1988: 667-71.
+#'Winkler WE. Using the EM Algorithm for Weight Computation in the Fellegi-Sunter Model of Record Linkage. \emph{Proc Sect Surv Res Methods}, Am Stat Assoc 1988: 667-71.
 #'
-#'Grannis SJ, Overhage JM, Hui S, et al. Analysis of a probabilistic record linkage technique without human review. AMIA 2003 Symp Proc 2003: 259-63.
+#'Grannis SJ, Overhage JM, Hui S, \emph{et al}. Analysis of a probabilistic record linkage technique without human review. \emph{AMIA 2003 Symp Proc} 2003: 259-63.
 #'
 #'
 #'@examples
@@ -170,7 +170,7 @@ em_winkler<-function(data1, data2, tol=0.001, maxit=500, do_plot=TRUE, verbose=F
 #'@description \code{em_winkler_big} implements the same method when the data are too big to compute 
 #'the agreement matrix. Agreement is then recomputed on the fly each time it is needed. The EM steps 
 #'are completely done in C++. This decreases the RAM usage (still important though), at the cost of 
-#'increasing computationnal time.
+#'increasing computational time.
 #'
 #'@rdname em_winkler
 #'
