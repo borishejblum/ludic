@@ -57,7 +57,7 @@
 #'bin_codes <- rbinom(n=npat*ncodes, size=1,  prob=rep(incid, npat))
 #'bin_codes_mat <- matrix(bin_codes, ncol=ncodes, byrow = TRUE)
 #'data1_ex <- bin_codes_mat[1:(npat/2+npat/10),]
-#'data2_ex <- bin_codes_mat[c(1:(npat/10), (npat/2+npat/10 + 1):npat),]
+#'data2_ex <- bin_codes_mat[c(1:(npat/10), (npat/2+npat/10 + 1):npat), ]
 #'rownames(data1_ex) <- paste0("ID", 1:(npat/2+npat/10), "_data1")
 #'rownames(data2_ex) <- paste0("ID", c(1:(npat/10), (npat/2+npat/10 + 1):npat), "_data2")
 #'
