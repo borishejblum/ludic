@@ -64,7 +64,7 @@
 #'\dontrun{
 #'res <- recordLink(data1 = data1_ex, data2 = data2_ex, 
 #'                  use_diff = FALSE, eps_minus = 0.01, eps_plus = 0.01)
-#'round(res[c(1:3, 20:23), c(1:3, 20:23)], 3)
+#'round(res[c(1:3, 19:23), c(1:3, 19:23)], 3)
 #'}
 #'
 #'@export
@@ -81,8 +81,8 @@ recordLink <- function(data1, data2, dates1 = NULL, dates2 = NULL,
   if(ncol(data2)!=nb_feat){stop("Number of columns in data2 is different from data1")}
   n1 <- nrow(data1)
   n2 <- nrow(data2)
-  if((is.null(data1_cont2diff) || is.null(data2_cont2diff)) && use_diff){
-    stop("cannot 'use_diff' when 'data1_cont2diff' and/or 'data2_cont2diff' is NULL")
+  if((is.null(data1_cont2diff) | is.null(data2_cont2diff)) && use_diff){
+    stop("cannot 'use_diff' when 'data1_cont2diff' and/or 'data2_cont2diff' is NULL\n Probably need to set 'use_diff = FALSE'")
   }
   if((is.null(dates1) & !is.null(dates2)) | (!is.null(dates1) & is.null(dates2))){
     stop("missing one of the dates tables")
@@ -197,21 +197,24 @@ recordLink <- function(data1, data2, dates1 = NULL, dates2 = NULL,
   colnames(dist_all) <- ind2
   rownames(dist_all) <- ind1
   
-  #sstdFit genrerates warnings - to be ignored
+  #sstdFit generates warnings - to be ignored
   if(length(dist_all)>10000){
-    sstdFit_1way <-  try(fGarch::sstdFit(x=sample(dist_all,10000)))
-    if(inherits(sstdFit_1way, "try-error")){sstdFit_1way <-  try(fGarch::sstdFit(x=sample(dist_all,10000)))}
+    sstdFit_1way <-  try(suppressWarnings(fGarch::sstdFit(x = sample(dist_all, 10000))), silent=TRUE)
+    if(inherits(sstdFit_1way, "try-error")){sstdFit_1way <-  try(suppressWarnings(fGarch::sstdFit(x = sample(dist_all,10000))), silent=TRUE)}
     tmp_est <-  sstdFit_1way$estimate
     for(i in 1:4){
-      sstdFit_1way_sub <-  try(fGarch::sstdFit(x=sample(dist_all,10000)))
-      if(inherits(sstdFit_1way_sub, "try-error")){sstdFit_1way_sub <-  try(fGarch::sstdFit(x=sample(dist_all,10000)))}
+      sstdFit_1way_sub <-  try(suppressWarnings(fGarch::sstdFit(x = sample(dist_all, 10000))), silent=TRUE)
+      if(inherits(sstdFit_1way_sub, "try-error")){sstdFit_1way_sub <-  try(suppressWarnings(fGarch::sstdFit(x = sample(dist_all, 10000))), silent=TRUE)}
       tmp_est <-  rbind(tmp_est, sstdFit_1way_sub$estimate)
     }
     sstdFit_1way$est <- colMeans(tmp_est, na.rm = TRUE)
   }else{
-    sstdFit_1way <-  try(fGarch::sstdFit(x=dist_all))
-    if(inherits(sstdFit_1way, "try-error")){sstdFit_1way <-  try(fGarch::sstdFit(x=dist_all))}
-    sstdFit_1way$est <-  sstdFit_1way$estimate
+    sstdFit_1way <-  try(suppressWarnings(fGarch::sstdFit(x = as.vector(dist_all))), silent=TRUE)
+    if(inherits(sstdFit_1way, "try-error")){sstdFit_1way <-  try(suppressWarnings(fGarch::sstdFit(x = as.vector(dist_all))), silent=TRUE)}
+    if(inherits(sstdFit_1way, "try-error")){
+      stop("Error in fitting the Student-t distribution")
+    }
+    sstdFit_1way$est <- sstdFit_1way$estimate
   }
   
   inter_x <- 0.1

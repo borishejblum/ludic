@@ -70,7 +70,7 @@ rownames(data2_ex) <- paste0("ID", c(1:(npat/10), (npat/2+npat/10 + 1):npat), "_
 \dontrun{
 res <- recordLink(data1 = data1_ex, data2 = data2_ex, 
                  use_diff = FALSE, eps_minus = 0.01, eps_plus = 0.01)
-round(res[c(1:3, 20:23), c(1:3, 20:23)], 3)
+round(res[c(1:3, 19:23), c(1:3, 19:23)], 3)
 }
 
 }
