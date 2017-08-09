@@ -20,6 +20,7 @@ r_packages:
 - Matrix
 - Rcpp
 - RcppArmadillo
+- testthat
 
 r_build_args: "--html"
 
