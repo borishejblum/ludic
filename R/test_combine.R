@@ -175,7 +175,11 @@ test_combine <- function(match_prob, y, x,
   for(k in 1:ncol(sds)){
     pvals_star[[k]] <- apply(theta_avg_star[[k]], MARGIN = 2, FUN = pval_zscore, sigma = sds[, k])
   }
-  fisher_comb_star <- lapply(pvals_star, function(m){apply(m, MARGIN = 2, FUN = comb_pvals)})
+  if(length(thresholds)>1){
+    fisher_comb_star <- lapply(pvals_star, function(m){apply(m, MARGIN = 2, FUN = comb_pvals)})
+  }else{
+    fisher_comb_star <- lapply(pvals_star, FUN = function(v){sapply(v, comb_pvals)})
+  }
   pval_combined <- matrix(nrow=1, ncol=ncol(pvals))
   row.names(pval_combined) <- "Combined p-value"
   colnames(pval_combined) <- colnames(pvals)
