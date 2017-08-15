@@ -296,7 +296,7 @@ em_winkler_big<-function(data1, data2, tol=0.001, maxit=500, do_plot=TRUE, oneon
     rm(col_max_mat)
   }
   
-  return(list("matchingScore"=ms, "threshold_ms"=threshold, "n_truematches"=n_truematches, "convergence_status"=conv_flag))
+  return(list("matchingScore"=ms, "threshold_ms"=threshold, "estim_nbmatch"=n_truematches, "convergence_status"=conv_flag))
 }
 
 
