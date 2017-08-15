@@ -1,8 +1,10 @@
 #'Probabilistic Patient Record Linkage
 #'
-#'@param data1 either a binary matrix or binary dataframe of dimension \code{nA x K} whose rownames are the observation identifiers.
+#'@param data1 either a binary (\code{1} or \code{0} values only) matrix or binary 
+#'data frame of dimension \code{nA x K} whose rownames are the observation identifiers.
 #'
-#'@param data2 either a binary matrix or a binary dataframe of dimension \code{nB x K} whose rownames are the observation identifiers.
+#'@param data2 either a binary (\code{1} or \code{0} values only) matrix or a binary
+#'data frame of dimension \code{nB x K} whose rownames are the observation identifiers.
 #'
 #'@param data1_cont2diff either a matrix or dataframe of continuous features, 
 #'such as age, for which the similarity measure uses the difference with 
@@ -105,7 +107,7 @@ recordLink <- function(data1, data2, dates1 = NULL, dates2 = NULL,
   ind1 <- rownames(data1)
   ind2 <- rownames(data2)
   
-  freq_select <- apply(X=(data1==1), MARGIN=2, FUN=mean) > min_prev
+  freq_select <- (colMeans(data1) > min_prev)
   data1_bin <- data1[,freq_select, drop=FALSE]
   data2_bin <- data2[,freq_select, drop=FALSE]
   if(datesNotNull){

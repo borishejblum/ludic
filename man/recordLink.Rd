@@ -9,9 +9,11 @@ recordLink(data1, data2, dates1 = NULL, dates2 = NULL, eps_plus, eps_minus,
   data2_cont2diff = NULL, d_max, use_diff = TRUE)
 }
 \arguments{
-\item{data1}{either a binary matrix or binary dataframe of dimension \code{nA x K} whose rownames are the observation identifiers.}
+\item{data1}{either a binary (\code{1} or \code{0} values only) matrix or binary 
+data frame of dimension \code{nA x K} whose rownames are the observation identifiers.}
 
-\item{data2}{either a binary matrix or a binary dataframe of dimension \code{nB x K} whose rownames are the observation identifiers.}
+\item{data2}{either a binary (\code{1} or \code{0} values only) matrix or a binary
+data frame of dimension \code{nB x K} whose rownames are the observation identifiers.}
 
 \item{dates1}{matrix or dataframe of dimension \code{nA x K} including the concatenated dates intervals for each corresponding 
 diagnosis codes in \code{data1}. Default is \code{NULL} in which case dates are not used.}

@@ -12,16 +12,16 @@ em_winkler_big(data1, data2, tol = 0.001, maxit = 500, do_plot = TRUE,
   verbose = FALSE)
 }
 \arguments{
-\item{data1}{either a binary matrix or dataframe whose rownames are .}
+\item{data1}{either a binary matrix or dataframe whose rownames are the observation identifiers.}
 
-\item{data2}{either a binary matrix or a dataframe whose rownames are .}
+\item{data2}{either a binary matrix or a dataframe whose rownames are the observation identifiers.}
 
-\item{tol}{tolerance for the EM algorithm convergence}
+\item{tol}{tolerance for the EM algorithm convergence.}
 
-\item{maxit}{maximum number of iterations for the EM algorithm}
+\item{maxit}{maximum number of iterations for the EM algorithm.}
 
 \item{do_plot}{a logical flag indicating whether a plot should be drawn for the EM convergence. 
-Default is \code{TRUE}}
+Default is \code{TRUE}.}
 
 \item{verbose}{a logical flag indicating whether intermediate values from the EM algorithm should 
 be printed. Useful for debugging. Default is \code{FALSE}.}

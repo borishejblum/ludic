@@ -1,15 +1,15 @@
 #'Implementation of Winkler's EM algorithm for Fellegi-Sunter matching method
 #'
-#'@param data1 either a binary matrix or dataframe whose rownames are .
+#'@param data1 either a binary matrix or dataframe whose rownames are the observation identifiers.
 #'
-#'@param data2 either a binary matrix or a dataframe whose rownames are .
+#'@param data2 either a binary matrix or a dataframe whose rownames are the observation identifiers.
 #'
-#'@param tol tolerance for the EM algorithm convergence
+#'@param tol tolerance for the EM algorithm convergence.
 #'
-#'@param maxit maximum number of iterations for the EM algorithm
+#'@param maxit maximum number of iterations for the EM algorithm.
 #'
 #'@param do_plot a logical flag indicating whether a plot should be drawn for the EM convergence. 
-#'Default is \code{TRUE}
+#'Default is \code{TRUE}.
 #'
 #'@param verbose a logical flag indicating whether intermediate values from the EM algorithm should 
 #'be printed. Useful for debugging. Default is \code{FALSE}. 
