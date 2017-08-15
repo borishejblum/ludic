@@ -1,8 +1,10 @@
 #'Implementation of Winkler's EM algorithm for Fellegi-Sunter matching method
 #'
-#'@param data1 either a binary matrix or dataframe whose rownames are the observation identifiers.
+#'@param data1 either a binary (\code{1} or \code{0} values only) matrix or binary 
+#'data frame of dimension \code{n1 x K} whose rownames are the observation identifiers.
 #'
-#'@param data2 either a binary matrix or a dataframe whose rownames are the observation identifiers.
+#'@param data2 either a binary (\code{1} or \code{0} values only) matrix or a binary
+#'data frame of dimension \code{n2 x K} whose rownames are the observation identifiers.
 #'
 #'@param tol tolerance for the EM algorithm convergence.
 #'
@@ -11,12 +13,23 @@
 #'@param do_plot a logical flag indicating whether a plot should be drawn for the EM convergence. 
 #'Default is \code{TRUE}.
 #'
+#'@param oneone a logical flag indicating whether one-one matching should be enforced. 
+#'If \code{TRUE}, then returned \code{matchingScores} are only kept for the maximum 
+#'score per column while lower scores are replace by \code{threshold-1}. 
+#'Default is \code{FALSE} in which case original \code{matchingScores} are returned.
+#'
 #'@param verbose a logical flag indicating whether intermediate values from the EM algorithm should 
 #'be printed. Useful for debugging. Default is \code{FALSE}. 
 #'
 #'
-#'@return a matrix of size \code{n1 x n2} with the matching score for each \code{n1*n2} pair.
-#'
+#'@return a list containing:
+#'\itemize{
+#'\item{\code{matchingScore}} a matrix of size \code{n1 x n2} with the matching score for each \code{n1*n2} pair.
+#'\item{\code{threshold_ms}} threshold value for the matching scores above which pairs are consodered true matches.
+#'\item{\code{estim_nbmatch}} an estimation of the number of true matches (\code{N} pairs 
+#'considered multiplied by \code{p} the estimated praportion of true matches from the EM algorithm) 
+#'\item{\code{convergence_status}} a logical flag indicating wether the EM algorithm converged
+#'}
 #'@references
 #'Winkler WE. Using the EM Algorithm for Weight Computation in the Fellegi-Sunter Model of Record Linkage. \emph{Proc Sect Surv Res Methods}, Am Stat Assoc 1988: 667-71.
 #'
@@ -37,7 +50,7 @@
 #'@importFrom Matrix Matrix
 #'
 #'@export
-em_winkler<-function(data1, data2, tol=0.001, maxit=500, do_plot=TRUE, verbose=FALSE){#}, sens_thres=0.99, spec_thres=0.99){
+em_winkler<-function(data1, data2, tol=0.001, maxit=500, do_plot=TRUE, oneone=FALSE, verbose=FALSE){#}, sens_thres=0.99, spec_thres=0.99){
   
   stopifnot(class(data1)=="matrix")
   stopifnot(class(data2)=="matrix")
@@ -158,9 +171,16 @@ em_winkler<-function(data1, data2, tol=0.001, maxit=500, do_plot=TRUE, verbose=F
   # thresholds <- c(ms_vec[o][which(TPR_Grannis[o]>=sens_thres)[1]],
   #                 ms_vec[o][which(TNR_Grannis[o]>=spec_thres)[1]])
   
+  if(oneone){
+    col_max <- apply(ms, 2, max) 
+    col_max_mat <- matrix(col_max, nrow=n1, ncol=n2, byrow = TRUE)
+    rm(col_max)
+    ms <- ms*(ms >= col_max_mat) + (threshold-1)*(ms < col_max_mat) 
+    rm(col_max_mat)
+  }
   
   
-  return(list("matchingScore"=ms, "threshold_ms"=threshold, "n_truematches"=n_truematches, "convergence_status"=conv_flag))
+  return(list("matchingScore"=ms, "threshold_ms"=threshold, "estim_nbmatch"=n_truematches, "convergence_status"=conv_flag))
 }
 
 
@@ -175,7 +195,7 @@ em_winkler<-function(data1, data2, tol=0.001, maxit=500, do_plot=TRUE, verbose=F
 #'@rdname em_winkler
 #'
 #'@export
-em_winkler_big<-function(data1, data2, tol=0.001, maxit=500, do_plot=TRUE, verbose=FALSE){#}, sens_thres=0.99, spec_thres=0.99){
+em_winkler_big<-function(data1, data2, tol=0.001, maxit=500, do_plot=TRUE, oneone=FALSE, verbose=FALSE){#}, sens_thres=0.99, spec_thres=0.99){
   
   stopifnot(class(data1)=="matrix")
   stopifnot(class(data2)=="matrix")
@@ -267,6 +287,14 @@ em_winkler_big<-function(data1, data2, tol=0.001, maxit=500, do_plot=TRUE, verbo
   threshold <- ms_vec[rev(o)][n_truematches]
   rownames(ms) <- rownames_data1
   colnames(ms) <- rownames_data2
+  
+  if(oneone){
+    col_max <- apply(ms, 2, max) 
+    col_max_mat <- matrix(col_max, nrow=n1, ncol=n2, byrow = TRUE)
+    rm(col_max)
+    ms <- ms*(ms >= col_max_mat) + (threshold-1)*(ms < col_max_mat) 
+    rm(col_max_mat)
+  }
   
   return(list("matchingScore"=ms, "threshold_ms"=threshold, "n_truematches"=n_truematches, "convergence_status"=conv_flag))
 }

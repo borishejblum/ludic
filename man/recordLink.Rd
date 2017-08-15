@@ -10,15 +10,15 @@ recordLink(data1, data2, dates1 = NULL, dates2 = NULL, eps_plus, eps_minus,
 }
 \arguments{
 \item{data1}{either a binary (\code{1} or \code{0} values only) matrix or binary 
-data frame of dimension \code{nA x K} whose rownames are the observation identifiers.}
+data frame of dimension \code{n1 x K} whose rownames are the observation identifiers.}
 
 \item{data2}{either a binary (\code{1} or \code{0} values only) matrix or a binary
-data frame of dimension \code{nB x K} whose rownames are the observation identifiers.}
+data frame of dimension \code{n2 x K} whose rownames are the observation identifiers.}
 
-\item{dates1}{matrix or dataframe of dimension \code{nA x K} including the concatenated dates intervals for each corresponding 
+\item{dates1}{matrix or dataframe of dimension \code{n1 x K} including the concatenated dates intervals for each corresponding 
 diagnosis codes in \code{data1}. Default is \code{NULL} in which case dates are not used.}
 
-\item{dates2}{matrix or dataframe of dimension \code{nB x K} including the concatenated dates intervals for each corresponding 
+\item{dates2}{matrix or dataframe of dimension \code{n2 x K} including the concatenated dates intervals for each corresponding 
 diagnosis codes in \code{data2}. Default is \code{NULL} in which case dates are not used. See details.}
 
 \item{eps_plus}{discrepancy rate between \code{data1} and \code{data2}}
@@ -47,7 +47,7 @@ from which it is considered a discrepancy.}
 \item{use_diff}{logical flag indicating whether continuous differentiable variables should be used in the}
 }
 \value{
-the posterior probability of matching matrix
+a matrix of size \code{n1 x n2} with the posterior probability of matching for each \code{n1*n2} pair
 }
 \description{
 Probabilistic Patient Record Linkage

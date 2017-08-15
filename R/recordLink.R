@@ -1,10 +1,10 @@
 #'Probabilistic Patient Record Linkage
 #'
 #'@param data1 either a binary (\code{1} or \code{0} values only) matrix or binary 
-#'data frame of dimension \code{nA x K} whose rownames are the observation identifiers.
+#'data frame of dimension \code{n1 x K} whose rownames are the observation identifiers.
 #'
 #'@param data2 either a binary (\code{1} or \code{0} values only) matrix or a binary
-#'data frame of dimension \code{nB x K} whose rownames are the observation identifiers.
+#'data frame of dimension \code{n2 x K} whose rownames are the observation identifiers.
 #'
 #'@param data1_cont2diff either a matrix or dataframe of continuous features, 
 #'such as age, for which the similarity measure uses the difference with 
@@ -31,10 +31,10 @@
 #'
 #'@param use_diff logical flag indicating whether continuous differentiable variables should be used in the 
 #'
-#'@param dates1 matrix or dataframe of dimension \code{nA x K} including the concatenated dates intervals for each corresponding 
+#'@param dates1 matrix or dataframe of dimension \code{n1 x K} including the concatenated dates intervals for each corresponding 
 #'diagnosis codes in \code{data1}. Default is \code{NULL} in which case dates are not used.
 #'
-#'@param dates2 matrix or dataframe of dimension \code{nB x K} including the concatenated dates intervals for each corresponding 
+#'@param dates2 matrix or dataframe of dimension \code{n2 x K} including the concatenated dates intervals for each corresponding 
 #'diagnosis codes in \code{data2}. Default is \code{NULL} in which case dates are not used. See details.
 #'
 #'@details \code{Dates:} the use of \code{dates1} and \code{dates2} requires that at least one date interval matches across 
@@ -49,7 +49,7 @@
 #'@importFrom landpred VTM
 #'@importFrom fGarch dsstd sstdFit
 #'
-#'@return the posterior probability of matching matrix
+#'@return a matrix of size \code{n1 x n2} with the posterior probability of matching for each \code{n1*n2} pair
 #'
 #'@examples
 #'set.seed(123)
