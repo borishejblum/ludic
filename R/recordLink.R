@@ -105,7 +105,7 @@ recordLink <- function(data1, data2, dates1 = NULL, dates2 = NULL,
   ind1 <- rownames(data1)
   ind2 <- rownames(data2)
   
-  freq_select <- apply(X=(data1==1), MARGIN=2, FUN=mean)>min_prev
+  freq_select <- apply(X=(data1==1), MARGIN=2, FUN=mean) > min_prev
   data1_bin <- data1[,freq_select, drop=FALSE]
   data2_bin <- data2[,freq_select, drop=FALSE]
   if(datesNotNull){

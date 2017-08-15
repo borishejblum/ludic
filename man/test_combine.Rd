@@ -5,7 +5,7 @@
 \title{Testing the combination of several matching thresholds}
 \usage{
 test_combine(match_prob, y, x, thresholds = seq(from = 0.1, to = 0.9, by =
-  0.2), nb_perturb = 200)
+  0.2), nb_perturb = 200, impute_strategy = c("weighted average", "best"))
 }
 \arguments{
 \item{match_prob}{matching probabilities matrix (e.g. obtained through \code{\link{recordLink}}) of 
@@ -20,6 +20,13 @@ to use to call a match. Default is \code{seq(from = 0.1, to = 0.9, by = 0.2)}.}
 
 \item{nb_perturb}{the number of perturbation used for the p-value combination.
 Default is 200.}
+
+\item{impute_strategy}{a character string indicating which strategy to use to impute x 
+from the matching probabilities \code{match_prob}. Either \code{"best"} (in which 
+case the highest probable match above the threshold is imputed) or \code{"wheighted average"}
+(in which case weighted mean is imputed for each individual who has at least
+one match with a posterior probability above the threshold). Default is 
+\code{"wheighted average"}.}
 }
 \value{
 a list containing the following:
@@ -49,7 +56,7 @@ associated with their combination through Fisher's method using perturbation res
 }
 \examples{
 res <- list()
-n_sims <- 1#000
+n_sims <- 1#5000
 for(n in 1:n_sims){
 y <- rbinom(n=103, 1, prob=0.5)
 x <- matrix(ncol=2, nrow=99, stats::rnorm(n=99*2))

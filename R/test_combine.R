@@ -16,6 +16,13 @@
 #'@param nb_perturb the number of perturbation used for the p-value combination.
 #'Default is 200.
 #'
+#'@param impute_strategy a character string indicating which strategy to use to impute x 
+#'from the matching probabilities \code{match_prob}. Either \code{"best"} (in which 
+#'case the highest probable match above the threshold is imputed) or \code{"wheighted average"}
+#'(in which case weighted mean is imputed for each individual who has at least
+#'one match with a posterior probability above the threshold). Default is 
+#'\code{"wheighted average"}.
+#'
 #'@importFrom landpred VTM
 #'@importFrom fGarch dsstd sstdFit
 #'@importFrom stats binomial glm na.omit rnorm
@@ -45,7 +52,7 @@
 #'
 #'@examples
 #'res <- list()
-#'n_sims <- 1#000
+#'n_sims <- 1#5000
 #'for(n in 1:n_sims){
 #'y <- rbinom(n=103, 1, prob=0.5)
 #'x <- matrix(ncol=2, nrow=99, stats::rnorm(n=99*2))
@@ -67,7 +74,8 @@
 
 test_combine <- function(match_prob, y, x,
                      thresholds = seq(from = 0.1, to = 0.9, by = 0.2), #c(0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.85, 0.9, 0.95),
-                     nb_perturb = 200){
+                     nb_perturb = 200,
+                     impute_strategy = c("weighted average", "best")){
   
   # sanity checks
   stopifnot(is.matrix(match_prob))
@@ -83,11 +91,14 @@ test_combine <- function(match_prob, y, x,
   mismatch_avg <- numeric(nb_thresholds)
   names(mismatch_avg) <- thresholds
   
+  
+  stopifnot(is.character(impute_strategy))
+  if(length(impute_strategy) > 1){
+    impute_strategy <- impute_strategy[1]
+  }
+  stopifnot(impute_strategy %in% c("weighted average", "best"))
+  
   # initializing results
-  betahat_best <- matrix(NA, ncol = 3, nrow = length(thresholds))
-  betahat_avg <- matrix(NA, ncol = 3, nrow = length(thresholds))
-  rownames(betahat_best) <- as.character(thresholds)
-  rownames(betahat_avg) <- as.character(thresholds)
   eta <- list()
   theta_avg <- matrix(NA, ncol = ncol(x) + 1, nrow = length(thresholds))
   rownames(theta_avg) <- as.character(thresholds)
@@ -101,25 +112,27 @@ test_combine <- function(match_prob, y, x,
     #construct the data-frame for the glm
     xi <- rowSums(prob_sup_cut) > 0
     n_rho <- sum(xi)
+    
     y_match <- y*xi
+    
     match_prob_sel <-  diag(1*xi) %*% match_prob
-    x_best <- x[max.col(match_prob_sel), ]
-    x_impute <- match_prob_sel %*% x / rowSums(match_prob_sel) #diag(1/rowSums(match_prob_sel)) %*% match_prob_sel %*% x/rowSums(match_prob_sel)
+    if(impute_strategy == "best"){
+      xi_NA <- xi
+      xi_NA[!xi] <- NA
+      x_impute <- diag(1*xi_NA) %*% x[max.col(match_prob_sel), ]
+    }else if(impute_strategy == "weighted average"){
+      x_impute <- match_prob_sel %*% x / rowSums(match_prob_sel) #diag(1/rowSums(match_prob_sel)) %*% match_prob_sel %*% x/rowSums(match_prob_sel)
+    }else{
+      stop("'strategy' is neither 'best' nor 'weighted average'")
+    }
     
-    y_match_sub <- y[xi]
-    x_best_sub <- x[max.col(match_prob[xi, ]), ]
-    x_impute_sub <- match_prob[xi, ]%*%x/rowSums(match_prob[xi, ])
+    #y_match_sub <- y[xi]
+    #x_best_sub <- x[max.col(match_prob[xi, ]), ]
+    #x_impute_sub <- match_prob[xi, ]%*%x/rowSums(match_prob[xi, ])
+    impute_fit_summary <- summary(stats::glm(y_match ~ x_impute, family = stats::binomial, na.action = stats::na.omit))
+    theta_avg[i, ] <- impute_fit_summary$coef[,"Estimate", drop=FALSE]
+    wald_pvals[i, ] <- impute_fit_summary$coef[,"Pr(>|z|)", drop=FALSE]
     
-    temp_1 <- try(summary(stats::glm(y_match ~ x_best, family = stats::binomial, na.action = stats::na.omit))$coef[2,-3], silent = TRUE)
-    if(inherits(temp_1, "try-error")){temp_1 <- rep(NA, 3)}
-    temp_avg <- try(summary(stats::glm(y_match ~ x_impute, family = stats::binomial, na.action = stats::na.omit))$coef[2,-3], silent = TRUE)
-    if(inherits(temp_avg, "try-error")){temp_avg <- rep(NA, 3)}
-    
-    theta <- summary(stats::glm(y_match ~ x_impute, family = stats::binomial, na.action = stats::na.omit))$coef[,"Estimate", drop=FALSE]
-    wald_pvals[i, ] <- summary(stats::glm(y_match ~ x_impute, family = stats::binomial, na.action = stats::na.omit))$coef[,"Pr(>|z|)", drop=FALSE]
-    #summary(stats::glm(y_match_sub ~ x_impute_sub, family = stats::binomial, na.action = stats::na.omit))$coef
-    #summary(stats::glm(y_match ~ x_impute, family = stats::binomial, na.action = stats::na.omit))$coef
-  
     # Z_sub <- stats::model.matrix( ~ x_impute_sub)
     # I_rho <- 1/n_rho*crossprod(apply(Z_sub, 2, function(colu){colu*sqrt(expit_dev1(Z_sub%*%theta))}))
     # eta[[as.character(cut_p)]] <- 1/n_rho*solve(I_rho)%*%t(Z_sub)%*%diag(x=(y_match_sub - expit(Z_sub%*%theta)[, "Estimate"]))
@@ -128,30 +141,24 @@ test_combine <- function(match_prob, y, x,
     x_impute_noNA <-  x_impute 
     x_impute_noNA[is.na(x_impute[, 1])] <- 0
     Z <- diag(xi) %*% stats::model.matrix( ~ x_impute_noNA)
-    I_rho <- 1/n_rho*crossprod(apply(Z, 2, function(colu){colu*sqrt(expit_dev1(Z%*%theta))}))
-    eta[[as.character(cut_p)]] <- 1/n_rho*solve(I_rho)%*%t(Z)%*%diag(x=(y_match - xi*expit(Z%*%theta)[, "Estimate"]))
-
+    I_rho <- 1/n_rho*crossprod(apply(Z, 2, function(colu){colu*sqrt(expit_dev1(Z %*% theta_avg[i, ]))}))
+    eta[[as.character(cut_p)]] <- 1/n_rho*solve(I_rho) %*% t(Z) %*% diag(x=(y_match - xi*expit(Z %*% theta_avg[i, ])[, 1]))
+    
     # fit <- stats::glm(y_match ~ x_impute, family = stats::binomial, na.action = stats::na.omit)
     # summary(fit)$coef
     # sqrt(apply(eta[[as.character(cut_p)]], 1, crossprod))
     # solve(vcov(fit))/n_rho
-    
-    theta_avg[i,] <- summary(stats::glm(y_match ~ x_impute, family = stats::binomial))$coef[,"Estimate", drop=FALSE]
   }
-  colnames(theta_avg) <- rownames(theta)
-  colnames(wald_pvals) <- rownames(theta)
-  colnames(betahat_best) <- names(temp_1)
-  colnames(betahat_avg) <- names(temp_avg)
-  betahat_avg <- cbind(betahat_avg, thresholds)
-  betahat_best <- cbind(betahat_best, thresholds) 
+  colnames(theta_avg) <- rownames(impute_fit_summary$coefficients)
+  colnames(wald_pvals) <- rownames(impute_fit_summary$coefficients)
   
   sigma <- list()
-  sds <- matrix(ncol=ncol(theta_avg), nrow=length(thresholds))
+  sds <- matrix(ncol=ncol(theta_avg), nrow = length(thresholds))
   colnames(sds) <- colnames(theta_avg)
   rownames(sds) <- thresholds
   eta_mat <- list()
   for(j in 1:ncol(theta_avg)){
-    eta_mat[[j]] <- sapply(X=eta, FUN=function(m){m[j,]})
+    eta_mat[[j]] <- sapply(X = eta, FUN = function(m){m[j, ]})
     sigma[[colnames(theta_avg)[j]]] <- crossprod(eta_mat[[j]])  
     sds[, j] <- sqrt(diag(sigma[[colnames(theta_avg)[j]]]))
   }
@@ -163,12 +170,12 @@ test_combine <- function(match_prob, y, x,
   fisher_comb <- apply(pvals, MARGIN = 2, FUN = comb_pvals)
   
   B <- nb_perturb #number of perturbations
-  theta_avg_star <- lapply(eta_mat, function(m){crossprod(m, matrix(stats::rnorm(n1*B, mean = 0, sd = 1), nrow=n1, ncol=B))})
+  theta_avg_star <- lapply(eta_mat, function(m){crossprod(m, matrix(stats::rnorm(n1*B, mean = 0, sd = 1), nrow = n1, ncol = B))})
   pvals_star <- list()
   for(k in 1:ncol(sds)){
-    pvals_star[[k]] <- apply(theta_avg_star[[k]], MARGIN=2, FUN=pval_zscore, sigma=sds[, k])
+    pvals_star[[k]] <- apply(theta_avg_star[[k]], MARGIN = 2, FUN = pval_zscore, sigma = sds[, k])
   }
-  fisher_comb_star <- lapply(pvals_star, function(m){apply(m, MARGIN=2, FUN=comb_pvals)})
+  fisher_comb_star <- lapply(pvals_star, function(m){apply(m, MARGIN = 2, FUN = comb_pvals)})
   pval_combined <- matrix(nrow=1, ncol=ncol(pvals))
   row.names(pval_combined) <- "Combined p-value"
   colnames(pval_combined) <- colnames(pvals)

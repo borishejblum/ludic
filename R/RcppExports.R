@@ -120,6 +120,21 @@ loglikratioC_diff_arbitrary <- function(Bmat, Amat, d_max, cost) {
     .Call(`_ludic_loglikratioC_diff_arbitrary`, Bmat, Amat, d_max, cost)
 }
 
+#'Compute the matching probabilities for each pair of observations
+#'
+#'C++ version: for each observations in \code{(1:n)}, all the matching probabilities are computed
+#'for the \code{p} possible pairs.
+#'
+#'@param computed_dist a \code{n x p} matrix of computed distances used for ranking.
+#'@param prop_match a priori proportion of matches ("rho_1")
+#'
+#'@return a \code{n x p} matrix containing the matching probabilities for each pair
+#'
+#'@export
+matchProbs_rank_full_C <- function(computed_dist, prop_match) {
+    .Call(`_ludic_matchProbs_rank_full_C`, computed_dist, prop_match)
+}
+
 #'Fast C++ computation of the final posterior probabilities in the E-M Winkler's method
 #'
 #'@param agreemat binary sparse matrix of dimensions \code{N x K} containing the agreement rows for each pair of potential matches.
@@ -141,20 +156,5 @@ matchingScore_C <- function(agreemat, m, u, nA, nB) {
 #'@export
 matchingScore_C_sparse_big <- function(mat_A, mat_B, m, u) {
     .Call(`_ludic_matchingScore_C_sparse_big`, mat_A, mat_B, m, u)
-}
-
-#'Compute the matching probabilities for each pair of observations
-#'
-#'C++ version: for each observations in \code{(1:n)}, all the matching probabilities are computed
-#'for the \code{p} possible pairs.
-#'
-#'@param computed_dist a \code{n x p} matrix of computed distances used for ranking.
-#'@param prop_match a priori proportion of matches ("rho_1")
-#'
-#'@return a \code{n x p} matrix containing the matching probabilities for each pair
-#'
-#'@export
-matchProbs_rank_full_C <- function(computed_dist, prop_match) {
-    .Call(`_ludic_matchProbs_rank_full_C`, computed_dist, prop_match)
 }
 

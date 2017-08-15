@@ -119,6 +119,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// matchProbs_rank_full_C
+NumericMatrix matchProbs_rank_full_C(NumericMatrix computed_dist, double prop_match);
+RcppExport SEXP _ludic_matchProbs_rank_full_C(SEXP computed_distSEXP, SEXP prop_matchSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type computed_dist(computed_distSEXP);
+    Rcpp::traits::input_parameter< double >::type prop_match(prop_matchSEXP);
+    rcpp_result_gen = Rcpp::wrap(matchProbs_rank_full_C(computed_dist, prop_match));
+    return rcpp_result_gen;
+END_RCPP
+}
 // matchingScore_C
 arma::mat matchingScore_C(arma::mat agreemat, arma::vec m, arma::vec u, int nA, int nB);
 RcppExport SEXP _ludic_matchingScore_C(SEXP agreematSEXP, SEXP mSEXP, SEXP uSEXP, SEXP nASEXP, SEXP nBSEXP) {
@@ -148,18 +160,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// matchProbs_rank_full_C
-NumericMatrix matchProbs_rank_full_C(NumericMatrix computed_dist, double prop_match);
-RcppExport SEXP _ludic_matchProbs_rank_full_C(SEXP computed_distSEXP, SEXP prop_matchSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericMatrix >::type computed_dist(computed_distSEXP);
-    Rcpp::traits::input_parameter< double >::type prop_match(prop_matchSEXP);
-    rcpp_result_gen = Rcpp::wrap(matchProbs_rank_full_C(computed_dist, prop_match));
-    return rcpp_result_gen;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_ludic_agree_C", (DL_FUNC) &_ludic_agree_C, 2},
@@ -170,9 +170,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_ludic_strsplitC", (DL_FUNC) &_ludic_strsplitC, 2},
     {"_ludic_loglikC_bin_wDates", (DL_FUNC) &_ludic_loglikC_bin_wDates, 8},
     {"_ludic_loglikratioC_diff_arbitrary", (DL_FUNC) &_ludic_loglikratioC_diff_arbitrary, 4},
+    {"_ludic_matchProbs_rank_full_C", (DL_FUNC) &_ludic_matchProbs_rank_full_C, 2},
     {"_ludic_matchingScore_C", (DL_FUNC) &_ludic_matchingScore_C, 5},
     {"_ludic_matchingScore_C_sparse_big", (DL_FUNC) &_ludic_matchingScore_C_sparse_big, 4},
-    {"_ludic_matchProbs_rank_full_C", (DL_FUNC) &_ludic_matchProbs_rank_full_C, 2},
     {NULL, NULL, 0}
 };
 
