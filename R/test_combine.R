@@ -11,7 +11,7 @@
 #'@param x a matrix of predictors of dimensions \code{n2 x p}
 #'
 #'@param thresholds a vector (possibly of length \code{1}) containing the different threshold 
-#'to use to call a match. Default is \code{seq(from = 0.1, to = 0.9, by = 0.2)}.
+#'to use to call a match. Default is \code{seq(from = 0.5, to = 0.95, by = 0.05)}.
 #'
 #'@param nb_perturb the number of perturbation used for the p-value combination.
 #'Default is 200.
@@ -73,7 +73,7 @@
 #'
 
 test_combine <- function(match_prob, y, x,
-                     thresholds = seq(from = 0.1, to = 0.9, by = 0.2), #c(0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.85, 0.9, 0.95),
+                     thresholds = seq(from = 0.5, to = 0.95, by = 0.05), #c(0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.85, 0.9, 0.95),
                      nb_perturb = 200,
                      impute_strategy = c("weighted average", "best")){
   

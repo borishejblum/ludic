@@ -4,8 +4,8 @@
 \alias{test_combine}
 \title{Testing the combination of several matching thresholds}
 \usage{
-test_combine(match_prob, y, x, thresholds = seq(from = 0.1, to = 0.9, by =
-  0.2), nb_perturb = 200, impute_strategy = c("weighted average", "best"))
+test_combine(match_prob, y, x, thresholds = seq(from = 0.5, to = 0.95, by =
+  0.05), nb_perturb = 200, impute_strategy = c("weighted average", "best"))
 }
 \arguments{
 \item{match_prob}{matching probabilities matrix (e.g. obtained through \code{\link{recordLink}}) of 
@@ -16,7 +16,7 @@ dimensions \code{n1 x n2}.}
 \item{x}{a matrix of predictors of dimensions \code{n2 x p}}
 
 \item{thresholds}{a vector (possibly of length \code{1}) containing the different threshold 
-to use to call a match. Default is \code{seq(from = 0.1, to = 0.9, by = 0.2)}.}
+to use to call a match. Default is \code{seq(from = 0.5, to = 0.95, by = 0.05)}.}
 
 \item{nb_perturb}{the number of perturbation used for the p-value combination.
 Default is 200.}
