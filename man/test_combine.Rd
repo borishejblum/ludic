@@ -23,10 +23,10 @@ Default is 200.}
 
 \item{impute_strategy}{a character string indicating which strategy to use to impute x 
 from the matching probabilities \code{match_prob}. Either \code{"best"} (in which 
-case the highest probable match above the threshold is imputed) or \code{"wheighted average"}
+case the highest probable match above the threshold is imputed) or \code{"weighted average"}
 (in which case weighted mean is imputed for each individual who has at least
 one match with a posterior probability above the threshold). Default is 
-\code{"wheighted average"}.}
+\code{"weighted average"}.}
 }
 \value{
 a list containing the following:
@@ -39,15 +39,17 @@ a list containing the following:
   \item \code{ptbed_pvals} a list containing, for each covariates, a matrix with
   the \code{nb_perturb} perturbed p-values with the different \code{thresholds}
   as rows
-  \item \code{theta_avgImpute} a matrix of the estimated coefficients from the glm when imputing 
+  \item \code{theta_impute} a matrix of the estimated coefficients from the glm when imputing 
   the weighted average for covariates (as columns) with the \code{thresholds} as rows
   \item \code{sd_theta} a matrix of the estimated SD (from the influence function) of the 
   coefficients from the glm when imputing the weighted average for covariates (as columns),
   with the \code{thresholds} as rows
-  \item \code{ptbed_theta_avgImpute} a list containing, for each covariates, a matrix with
+  \item \code{ptbed_theta_impute} a list containing, for each covariates, a matrix with
   the \code{nb_perturb} perturbed estimated coefficients from the glm when imputing 
   the weighted average for covariates, with the different \code{thresholds}
   as rows
+  \item \code{impute_strategy} a character string indicating which impute 
+  strategy was used (either \code{"weighted average"} or \code{"best"})
 }
 }
 \description{

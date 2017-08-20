@@ -18,10 +18,10 @@
 #'
 #'@param impute_strategy a character string indicating which strategy to use to impute x 
 #'from the matching probabilities \code{match_prob}. Either \code{"best"} (in which 
-#'case the highest probable match above the threshold is imputed) or \code{"wheighted average"}
+#'case the highest probable match above the threshold is imputed) or \code{"weighted average"}
 #'(in which case weighted mean is imputed for each individual who has at least
 #'one match with a posterior probability above the threshold). Default is 
-#'\code{"wheighted average"}.
+#'\code{"weighted average"}.
 #'
 #'@importFrom landpred VTM
 #'@importFrom fGarch dsstd sstdFit
@@ -37,15 +37,17 @@
 #'   \item \code{ptbed_pvals} a list containing, for each covariates, a matrix with
 #'   the \code{nb_perturb} perturbed p-values with the different \code{thresholds}
 #'   as rows
-#'   \item \code{theta_avgImpute} a matrix of the estimated coefficients from the glm when imputing 
+#'   \item \code{theta_impute} a matrix of the estimated coefficients from the glm when imputing 
 #'   the weighted average for covariates (as columns) with the \code{thresholds} as rows
 #'   \item \code{sd_theta} a matrix of the estimated SD (from the influence function) of the 
 #'   coefficients from the glm when imputing the weighted average for covariates (as columns),
 #'   with the \code{thresholds} as rows
-#'   \item \code{ptbed_theta_avgImpute} a list containing, for each covariates, a matrix with
+#'   \item \code{ptbed_theta_impute} a list containing, for each covariates, a matrix with
 #'   the \code{nb_perturb} perturbed estimated coefficients from the glm when imputing 
 #'   the weighted average for covariates, with the different \code{thresholds}
 #'   as rows
+#'   \item \code{impute_strategy} a character string indicating which impute 
+#'   strategy was used (either \code{"weighted average"} or \code{"best"})
 #'}
 #'
 #'@export
@@ -187,14 +189,16 @@ test_combine <- function(match_prob, y, x,
     pval_combined[1, k] <- 1-sum(fisher_comb[k] >= fisher_comb_star[[k]])/B
   }
 
+  browser()
   return(list("influencefn_pvals" = cbind.data.frame(rbind(pval_combined, pvals), 
                                                      "matching_threshold" = c("combined", rownames(pvals)),
                                                      "impute_strategy" = impute_strategy),
               "wald_pvals" = wald_pvals,
               "ptbed_pvals" = pvals_star,
-              "theta_avgImpute" = theta_avg,
+              "theta_impute" = theta_avg,
               "sd_theta"=sds,
-              "ptbed_theta_avgImpute" = theta_avg_star)
+              "ptbed_theta_impute" = theta_avg_star,
+              "impute_strategy" = impute_strategy)
   )
   
 }
