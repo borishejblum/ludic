@@ -13,6 +13,7 @@ matrix:
 
     - os: osx
       r: release
+      compiler: gcc
 
 r_packages:
 - fGarch
