@@ -189,7 +189,6 @@ test_combine <- function(match_prob, y, x,
     pval_combined[1, k] <- 1-sum(fisher_comb[k] >= fisher_comb_star[[k]])/B
   }
 
-  browser()
   return(list("influencefn_pvals" = cbind.data.frame(rbind(pval_combined, pvals), 
                                                      "matching_threshold" = c("combined", rownames(pvals)),
                                                      "impute_strategy" = impute_strategy),
