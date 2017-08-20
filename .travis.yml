@@ -11,9 +11,12 @@ matrix:
     - os: linux
       r: devel
 
+  allow_failures:
     - os: osx
       r: release
-      compiler: gcc
+      
+    - os: osx
+      r: devel
 
 r_packages:
 - fGarch
