@@ -12,7 +12,7 @@ matrix:
       r: devel
 
     - os: osx
-      r: devel
+      r: release
 
 r_packages:
 - fGarch
