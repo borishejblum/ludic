@@ -12,7 +12,8 @@ matrix:
     - os: linux
       dist: trusty
       r: devel
-
+      
+  allow_failures:
     - os: osx
       r: release
       
