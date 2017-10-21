@@ -2,10 +2,11 @@
 % Please edit documentation in R/test_combine.R
 \name{test_combine}
 \alias{test_combine}
-\title{Testing the combination of several matching thresholds}
+\title{Association testing by combining several matching thresholds}
 \usage{
 test_combine(match_prob, y, x, thresholds = seq(from = 0.5, to = 0.95, by =
-  0.05), nb_perturb = 200, impute_strategy = c("weighted average", "best"))
+  0.05), nb_perturb = 200, dist_family = c("gaussian", "binomial"),
+  impute_strategy = c("weighted average", "best"))
 }
 \arguments{
 \item{match_prob}{matching probabilities matrix (e.g. obtained through \code{\link{recordLink}}) of 
@@ -53,27 +54,30 @@ a list containing the following:
 }
 }
 \description{
-Computes p-value for each considered threshold, and computes a p-value 
+Computes association test p-value for each considered threshold, and computes a p-value 
 associated with their combination through Fisher's method using perturbation resampling.
 }
 \examples{
 res <- list()
 n_sims <- 1#5000
 for(n in 1:n_sims){
-y <- rbinom(n=103, 1, prob=0.5)
 x <- matrix(ncol=2, nrow=99, stats::rnorm(n=99*2))
 
 #plot(density(rbeta(n=1000, 1,2)))
 match_prob <- matrix(rbeta(n=103*99, 1, 2), nrow=103, ncol=99)
 
-res[[n]] <- test_combine(match_prob, y, x)$influencefn_pvals
+
+#y <- rnorm(n=103, 1, 0.5)
+#res[[n]] <- test_combine(match_prob, y, x, dist_family="gaussian")$influencefn_pvals
+y <- rbinom(n=103, 1, prob=0.5)
+res[[n]] <- test_combine(match_prob, y, x, dist_family="binomial")$influencefn_pvals
 cat(n, "/", n_sims, "\\n", sep="")
 }
-size <- matrix(NA, ncol=nrow(res[[1]]), nrow=ncol(res[[1]])-1)
+size <- matrix(NA, ncol=nrow(res[[1]]), nrow=ncol(res[[1]])-2)
 colnames(size) <- rownames(res[[1]])
 rownames(size) <- colnames(res[[1]])[-ncol(res[[1]])]
-for(i in 1:(ncol(res[[1]])-1)){
- size[i, ] <- rowMeans(sapply(res, function(m){m[, i]<0.05}))
+for(i in 1:(ncol(res[[1]])-2)){
+ size[i, ] <- rowMeans(sapply(res, function(m){m[, i]<0.05}), na.rm = TRUE)
 }
 size
 

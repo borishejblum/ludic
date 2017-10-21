@@ -1,6 +1,6 @@
-#' Testing the combination of several matching thresholds
+#' Association testing by combining several matching thresholds
 #' 
-#' Computes p-value for each considered threshold, and computes a p-value 
+#' Computes association test p-value for each considered threshold, and computes a p-value 
 #' associated with their combination through Fisher's method using perturbation resampling.
 #'
 #'@param match_prob matching probabilities matrix (e.g. obtained through \code{\link{recordLink}}) of 
@@ -56,20 +56,23 @@
 #'res <- list()
 #'n_sims <- 1#5000
 #'for(n in 1:n_sims){
-#'y <- rbinom(n=103, 1, prob=0.5)
 #'x <- matrix(ncol=2, nrow=99, stats::rnorm(n=99*2))
 #'
 #'#plot(density(rbeta(n=1000, 1,2)))
 #'match_prob <- matrix(rbeta(n=103*99, 1, 2), nrow=103, ncol=99)
 #'
-#'res[[n]] <- test_combine(match_prob, y, x)$influencefn_pvals
+#'
+#'#y <- rnorm(n=103, 1, 0.5)
+#'#res[[n]] <- test_combine(match_prob, y, x, dist_family="gaussian")$influencefn_pvals
+#'y <- rbinom(n=103, 1, prob=0.5)
+#'res[[n]] <- test_combine(match_prob, y, x, dist_family="binomial")$influencefn_pvals
 #'cat(n, "/", n_sims, "\n", sep="")
 #'}
-#'size <- matrix(NA, ncol=nrow(res[[1]]), nrow=ncol(res[[1]])-1)
+#'size <- matrix(NA, ncol=nrow(res[[1]]), nrow=ncol(res[[1]])-2)
 #'colnames(size) <- rownames(res[[1]])
 #'rownames(size) <- colnames(res[[1]])[-ncol(res[[1]])]
-#'for(i in 1:(ncol(res[[1]])-1)){
-#'  size[i, ] <- rowMeans(sapply(res, function(m){m[, i]<0.05}))
+#'for(i in 1:(ncol(res[[1]])-2)){
+#'  size[i, ] <- rowMeans(sapply(res, function(m){m[, i]<0.05}), na.rm = TRUE)
 #'}
 #'size
 #'
@@ -77,7 +80,12 @@
 test_combine <- function(match_prob, y, x,
                      thresholds = seq(from = 0.5, to = 0.95, by = 0.05), #c(0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.85, 0.9, 0.95),
                      nb_perturb = 200,
+                     dist_family = c("gaussian", "binomial"),
                      impute_strategy = c("weighted average", "best")){
+  
+  if(length(dist_family)>1){
+    dist_family <- dist_family[1]
+  }
   
   # sanity checks
   stopifnot(is.matrix(match_prob))
@@ -92,6 +100,10 @@ test_combine <- function(match_prob, y, x,
   nb_thresholds <- length(thresholds)
   mismatch_avg <- numeric(nb_thresholds)
   names(mismatch_avg) <- thresholds
+  
+  if(!(dist_family %in% c("gaussian", "binomial"))){
+    stop("'gaussian' or 'binomial' are the only valid values for dist_family currently supported")
+  }
   
   
   stopifnot(is.character(impute_strategy))
@@ -131,10 +143,15 @@ test_combine <- function(match_prob, y, x,
     #y_match_sub <- y[xi]
     #x_best_sub <- x[max.col(match_prob[xi, ]), ]
     #x_impute_sub <- match_prob[xi, ]%*%x/rowSums(match_prob[xi, ])
-    impute_fit_summary <- summary(stats::glm(y_match ~ x_impute, family = stats::binomial, na.action = stats::na.omit))
+    impute_fit_summary <- summary(stats::glm(y_match ~ x_impute, family = dist_family, na.action = stats::na.omit))
     theta_avg[i, ] <- impute_fit_summary$coef[,"Estimate", drop=FALSE]
-    wald_pvals[i, ] <- impute_fit_summary$coef[,"Pr(>|z|)", drop=FALSE]
-    
+    if(dist_family == "binomial"){
+      wald_pvals[i, ] <- impute_fit_summary$coef[,"Pr(>|z|)", drop=FALSE]
+    }else if(dist_family == "gaussian"){
+      wald_pvals[i, ] <- impute_fit_summary$coef[,"Pr(>|t|)", drop=FALSE]
+    }else{
+      stop("dist_family is neither 'gaussian' nor 'binomial'")
+    }
     # Z_sub <- stats::model.matrix( ~ x_impute_sub)
     # I_rho <- 1/n_rho*crossprod(apply(Z_sub, 2, function(colu){colu*sqrt(expit_dev1(Z_sub%*%theta))}))
     # eta[[as.character(cut_p)]] <- 1/n_rho*solve(I_rho)%*%t(Z_sub)%*%diag(x=(y_match_sub - expit(Z_sub%*%theta)[, "Estimate"]))
@@ -143,8 +160,16 @@ test_combine <- function(match_prob, y, x,
     x_impute_noNA <-  x_impute 
     x_impute_noNA[is.na(x_impute[, 1])] <- 0
     Z <- diag(xi) %*% stats::model.matrix( ~ x_impute_noNA)
-    I_rho <- 1/n_rho*crossprod(apply(Z, 2, function(colu){colu*sqrt(expit_dev1(Z %*% theta_avg[i, ]))}))
-    eta[[as.character(cut_p)]] <- 1/n_rho*solve(I_rho) %*% t(Z) %*% diag(x=(y_match - xi*expit(Z %*% theta_avg[i, ])[, 1]))
+  
+    if(dist_family == "binomial"){
+      I_rho <- 1/n_rho*crossprod(apply(Z, 2, function(colu){colu*sqrt(expit_dev1(Z %*% theta_avg[i, ]))}))
+      eta[[as.character(cut_p)]] <- 1/n_rho*solve(I_rho) %*% t(Z) %*% diag(x=(y_match - xi*expit(Z %*% theta_avg[i, ])[, 1]))
+    }else if(dist_family == "gaussian"){
+      I_rho <- 1/n_rho*crossprod(apply(Z, 2, function(colu){colu*sqrt(Z %*% theta_avg[i, ])}))
+      eta[[as.character(cut_p)]] <- 1/n_rho*solve(I_rho) %*% t(Z) %*% diag(x=(y_match - xi*(Z %*% theta_avg[i, ])[, 1]))
+    }else{
+      stop("dist_family is neither 'gaussian' nor 'binomial'")
+    }
     
     # fit <- stats::glm(y_match ~ x_impute, family = stats::binomial, na.action = stats::na.omit)
     # summary(fit)$coef
