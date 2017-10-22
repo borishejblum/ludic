@@ -23,6 +23,10 @@ to use to call a match. Default is \code{seq(from = 0.5, to = 0.95, by = 0.05)}.
 \item{nb_perturb}{the number of perturbation used for the p-value combination.
 Default is 200.}
 
+\item{dist_family}{a character string indicating the distribution family for the glm. 
+Currently, only \code{'gaussian'} and  \code{'binomial'} are suspported. Default 
+is \code{'gaussian'}.}
+
 \item{impute_strategy}{a character string indicating which strategy to use to impute x 
 from the matching probabilities \code{match_prob}. Either \code{"best"} (in which 
 case the highest probable match above the threshold is imputed) or \code{"weighted average"}
@@ -55,11 +59,12 @@ a list containing the following:
 }
 }
 \description{
-Computes association test p-values from a lgeneralized linear model for each considered 
+Computes association test p-values from a generalized linear model for each considered 
 threshold, and computes a p-value for the combination of all the envisionned thresholds 
 through Fisher's method using perturbation resampling.
 }
 \examples{
+#rm(list=ls())
 res <- list()
 n_sims <- 1#5000
 for(n in 1:n_sims){

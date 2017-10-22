@@ -1,6 +1,6 @@
 #' Association testing by combining several matching thresholds
 #' 
-#' Computes association test p-values from a lgeneralized linear model for each considered 
+#' Computes association test p-values from a generalized linear model for each considered 
 #' threshold, and computes a p-value for the combination of all the envisionned thresholds 
 #' through Fisher's method using perturbation resampling.
 #'
@@ -18,6 +18,10 @@
 #'@param nb_perturb the number of perturbation used for the p-value combination.
 #'Default is 200.
 #'
+#'@param dist_family a character string indicating the distribution family for the glm. 
+#'Currently, only \code{'gaussian'} and  \code{'binomial'} are suspported. Default 
+#'is \code{'gaussian'}.
+#'
 #'@param impute_strategy a character string indicating which strategy to use to impute x 
 #'from the matching probabilities \code{match_prob}. Either \code{"best"} (in which 
 #'case the highest probable match above the threshold is imputed) or \code{"weighted average"}
@@ -27,7 +31,7 @@
 #'
 #'@importFrom landpred VTM
 #'@importFrom fGarch dsstd sstdFit
-#'@importFrom stats binomial glm na.omit rnorm
+#'@importFrom stats binomial glm na.omit rnorm as.formula model.matrix
 #'
 #'@return a list containing the following:
 #'\itemize{
@@ -55,6 +59,7 @@
 #'@export
 #'
 #'@examples
+#'#rm(list=ls())
 #'res <- list()
 #'n_sims <- 1#5000
 #'for(n in 1:n_sims){
@@ -99,9 +104,9 @@ test_combine <- function(match_prob, y, x,
     match_prob <- match_prob[, -x_toremove]
   }
   if(is.data.frame(x)){
-    x <- model.matrix(as.formula(paste0("~", paste(colnames(x), collapse=" + "))), data = x)[, -1, drop = FALSE]
+    x <- stats::model.matrix(stats::as.formula(paste0("~", paste(colnames(x), collapse=" + "))), data = x)[, -1, drop = FALSE]
   }else if(is.matrix(x)){
-    if(all(x[,1]==1) | colnames(x)[1] == "(Intercept)"){
+    if(all(x[,1]==1) | ifelse(!is.null(colnames(x)), colnames(x)[1] == "(Intercept)", FALSE)){
       x <- x[, -1, drop = FALSE]
     }
   }else{
