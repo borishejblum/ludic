@@ -82,7 +82,7 @@ cat(n, "/", n_sims, "\\n", sep="")
 }
 size <- matrix(NA, ncol=nrow(res[[1]]), nrow=ncol(res[[1]])-2)
 colnames(size) <- rownames(res[[1]])
-rownames(size) <- colnames(res[[1]])[-ncol(res[[1]])]
+rownames(size) <- colnames(res[[1]])[-(-1:0 + ncol(res[[1]]))]
 for(i in 1:(ncol(res[[1]])-2)){
  size[i, ] <- rowMeans(sapply(res, function(m){m[, i]<0.05}), na.rm = TRUE)
 }
