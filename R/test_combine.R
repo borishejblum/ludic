@@ -1,14 +1,16 @@
 #' Association testing by combining several matching thresholds
 #' 
-#' Computes association test p-value for each considered threshold, and computes a p-value 
-#' associated with their combination through Fisher's method using perturbation resampling.
+#' Computes association test p-values from a lgeneralized linear model for each considered 
+#' threshold, and computes a p-value for the combination of all the envisionned thresholds 
+#' through Fisher's method using perturbation resampling.
 #'
 #'@param match_prob matching probabilities matrix (e.g. obtained through \code{\link{recordLink}}) of 
 #'dimensions \code{n1 x n2}.
 #'
 #'@param y response variable of length \code{n1}. Only binary phenotypes are supported at the moment.
 #'
-#'@param x a matrix of predictors of dimensions \code{n2 x p}
+#'@param x a \code{matrix} or a \code{data.frame} of predictors of dimensions \code{n2 x p}. 
+#'An intercept is automatically within the function.
 #'
 #'@param thresholds a vector (possibly of length \code{1}) containing the different threshold 
 #'to use to call a match. Default is \code{seq(from = 0.5, to = 0.95, by = 0.05)}.
@@ -89,13 +91,38 @@ test_combine <- function(match_prob, y, x,
   
   # sanity checks
   stopifnot(is.matrix(match_prob))
-  stopifnot(is.matrix(x))
+  
+  if(length(which(is.na(x))) > 0){
+    warning("x contains NA/nan: to be able to provide results associated observations will be removed")
+    x_toremove <- unique(which(is.na(x), arr.ind = TRUE)[, "row"])
+    x <- x[-x_toremove, ]
+    match_prob <- match_prob[, -x_toremove]
+  }
+  if(is.data.frame(x)){
+    x <- model.matrix(as.formula(paste0("~", paste(colnames(x), collapse=" + "))), data = x)[, -1, drop = FALSE]
+  }else if(is.matrix(x)){
+    if(all(x[,1]==1) | colnames(x)[1] == "(Intercept)"){
+      x <- x[, -1, drop = FALSE]
+    }
+  }else{
+    stop("x is neither a data.frame nor a matrix")
+  }
   stopifnot(is.vector(y))
+  
   
   n1 <- length(y)
   n2 <- nrow(x)
   stopifnot(nrow(match_prob) == n1)
   stopifnot(ncol(match_prob) == n2)
+  
+  if(length(which(is.na(y))) > 0){
+    warning("y contains NA/nan: to be able to provide results associated observations will be removed")
+    y_toremove <- which(is.na(y))
+    y <- y[-y_toremove]
+    match_prob <- match_prob[-y_toremove, ]
+  }
+  n1 <- length(y)
+  stopifnot(nrow(match_prob) == n1)
   
   nb_thresholds <- length(thresholds)
   mismatch_avg <- numeric(nb_thresholds)
@@ -114,9 +141,10 @@ test_combine <- function(match_prob, y, x,
   
   # initializing results
   eta <- list()
-  theta_avg <- matrix(NA, ncol = ncol(x) + 1, nrow = length(thresholds))
+  ncoef <- ncol(x) +1
+  theta_avg <- matrix(NA, ncol = ncoef, nrow = length(thresholds))
   rownames(theta_avg) <- as.character(thresholds)
-  wald_pvals <- matrix(NA, ncol = ncol(x) + 1, nrow = length(thresholds))
+  wald_pvals <- matrix(NA, ncol = ncoef, nrow = length(thresholds))
   rownames(wald_pvals) <- as.character(thresholds)
   
   for(i in 1:length(thresholds)){
@@ -144,11 +172,11 @@ test_combine <- function(match_prob, y, x,
     #x_best_sub <- x[max.col(match_prob[xi, ]), ]
     #x_impute_sub <- match_prob[xi, ]%*%x/rowSums(match_prob[xi, ])
     impute_fit_summary <- summary(stats::glm(y_match ~ x_impute, family = dist_family, na.action = stats::na.omit))
-    theta_avg[i, ] <- impute_fit_summary$coef[,"Estimate", drop=FALSE]
+    theta_avg[i, ] <- impute_fit_summary$coef[, "Estimate", drop=FALSE]
     if(dist_family == "binomial"){
-      wald_pvals[i, ] <- impute_fit_summary$coef[,"Pr(>|z|)", drop=FALSE]
+      wald_pvals[i, ] <- impute_fit_summary$coef[, "Pr(>|z|)", drop=FALSE]
     }else if(dist_family == "gaussian"){
-      wald_pvals[i, ] <- impute_fit_summary$coef[,"Pr(>|t|)", drop=FALSE]
+      wald_pvals[i, ] <- impute_fit_summary$coef[, "Pr(>|t|)", drop=FALSE]
     }else{
       stop("dist_family is neither 'gaussian' nor 'binomial'")
     }
@@ -160,7 +188,7 @@ test_combine <- function(match_prob, y, x,
     x_impute_noNA <-  x_impute 
     x_impute_noNA[is.na(x_impute[, 1])] <- 0
     Z <- diag(xi) %*% stats::model.matrix( ~ x_impute_noNA)
-  
+    
     if(dist_family == "binomial"){
       I_rho <- 1/n_rho*crossprod(apply(Z, 2, function(colu){colu*sqrt(expit_dev1(Z %*% theta_avg[i, ]))}))
       eta[[as.character(cut_p)]] <- 1/n_rho*solve(I_rho) %*% t(Z) %*% diag(x=(y_match - xi*expit(Z %*% theta_avg[i, ])[, 1]))

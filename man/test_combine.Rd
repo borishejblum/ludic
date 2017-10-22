@@ -14,7 +14,8 @@ dimensions \code{n1 x n2}.}
 
 \item{y}{response variable of length \code{n1}. Only binary phenotypes are supported at the moment.}
 
-\item{x}{a matrix of predictors of dimensions \code{n2 x p}}
+\item{x}{a \code{matrix} or a \code{data.frame} of predictors of dimensions \code{n2 x p}. 
+An intercept is automatically within the function.}
 
 \item{thresholds}{a vector (possibly of length \code{1}) containing the different threshold 
 to use to call a match. Default is \code{seq(from = 0.5, to = 0.95, by = 0.05)}.}
@@ -54,8 +55,9 @@ a list containing the following:
 }
 }
 \description{
-Computes association test p-value for each considered threshold, and computes a p-value 
-associated with their combination through Fisher's method using perturbation resampling.
+Computes association test p-values from a lgeneralized linear model for each considered 
+threshold, and computes a p-value for the combination of all the envisionned thresholds 
+through Fisher's method using perturbation resampling.
 }
 \examples{
 res <- list()
