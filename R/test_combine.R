@@ -198,7 +198,7 @@ test_combine <- function(match_prob, y, x,
       I_rho <- 1/n_rho*crossprod(apply(Z, 2, function(colu){colu*sqrt(expit_dev1(Z %*% theta_avg[i, ]))}))
       eta[[as.character(cut_p)]] <- 1/n_rho*solve(I_rho) %*% t(Z) %*% diag(x=(y_match - xi*expit(Z %*% theta_avg[i, ])[, 1]))
     }else if(dist_family == "gaussian"){
-      I_rho <- 1/n_rho*crossprod(apply(Z, 2, function(colu){colu*sqrt(Z %*% theta_avg[i, ])}))
+      I_rho <- 1/n_rho*crossprod(Z)
       eta[[as.character(cut_p)]] <- 1/n_rho*solve(I_rho) %*% t(Z) %*% diag(x=(y_match - xi*(Z %*% theta_avg[i, ])[, 1]))
     }else{
       stop("dist_family is neither 'gaussian' nor 'binomial'")
