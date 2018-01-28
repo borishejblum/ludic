@@ -5,7 +5,7 @@
 #'@details According to Fisher's rule, if the p-values are correlated, then this does not follow a simple chi-square 
 #' mixture under the null.
 #'
-#'@param pv the vector of p-values to be combiend together
+#'@param pv the vector of p-values to be combined together
 #'
 #'@return the Fisher combination of the p-values. See Details.
 #'

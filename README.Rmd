@@ -29,7 +29,7 @@ On top of the [CRAN help files](https://cran.r-project.org/package=ludic), the f
 
 > BP Hejblum, G Weber, KP Liao, N Palmer, S Churchill, P Szolovits, S Murphy, I Kohane, 
 T Cai, Probabilistic Record Linkage of De-Identified Research Datasets Using Diagnosis 
-Codes, 2016, *submitted*.
+Codes, 2017, *submitted*.
 
 
 ## Installation
@@ -38,8 +38,7 @@ The easiest way to get `ludic` is to install it from [CRAN](https://cran.r-proje
 ```{r CRAN-install, eval=FALSE}
 install.packages("ludic")
 ```
-
-Or to get the development version from [GitHub](https://github.com/borishejblum/ludic):
+or alternatively you can get the development version from [GitHub](https://github.com/borishejblum/ludic):
 ```{r GitHub-install, eval=FALSE}
 #install.packages("devtools")
 devtools::install_github("borishejblum/ludic")

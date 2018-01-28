@@ -2,12 +2,12 @@
 % Please edit documentation in R/em_winkler.R
 \name{matching_score}
 \alias{matching_score}
-\title{Computes a matching score from aggrement vectors and weights}
+\title{Computes a matching score from agreement vectors and weights}
 \usage{
 matching_score(agree, m, u)
 }
 \description{
-Computes a matching score from aggrement vectors and weights
+Computes a matching score from agreement vectors and weights
 }
 \examples{
 estep_vect <- function(ag_score, p, m, u){

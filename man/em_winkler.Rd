@@ -37,10 +37,10 @@ be printed. Useful for debugging. Default is \code{FALSE}.}
 a list containing:
 \itemize{
 \item{\code{matchingScore}} a matrix of size \code{n1 x n2} with the matching score for each \code{n1*n2} pair.
-\item{\code{threshold_ms}} threshold value for the matching scores above which pairs are consodered true matches.
+\item{\code{threshold_ms}} threshold value for the matching scores above which pairs are considered true matches.
 \item{\code{estim_nbmatch}} an estimation of the number of true matches (\code{N} pairs 
-considered multiplied by \code{p} the estimated praportion of true matches from the EM algorithm) 
-\item{\code{convergence_status}} a logical flag indicating wether the EM algorithm converged
+considered multiplied by \code{p} the estimated proportion of true matches from the EM algorithm) 
+\item{\code{convergence_status}} a logical flag indicating whether the EM algorithm converged
 }
 }
 \description{

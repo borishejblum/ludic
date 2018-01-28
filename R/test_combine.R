@@ -1,7 +1,7 @@
 #' Association testing by combining several matching thresholds
 #' 
 #' Computes association test p-values from a generalized linear model for each considered 
-#' threshold, and computes a p-value for the combination of all the envisionned thresholds 
+#' threshold, and computes a p-value for the combination of all the envisioned thresholds 
 #' through Fisher's method using perturbation resampling.
 #'
 #'@param match_prob matching probabilities matrix (e.g. obtained through \code{\link{recordLink}}) of 
@@ -19,7 +19,7 @@
 #'Default is 200.
 #'
 #'@param dist_family a character string indicating the distribution family for the glm. 
-#'Currently, only \code{'gaussian'} and  \code{'binomial'} are suspported. Default 
+#'Currently, only \code{'gaussian'} and  \code{'binomial'} are supported. Default 
 #'is \code{'gaussian'}.
 #'
 #'@param impute_strategy a character string indicating which strategy to use to impute x 
@@ -35,7 +35,7 @@
 #'
 #'@return a list containing the following:
 #'\itemize{
-#'   \item \code{influencefn_pvals} p-values obtained from influence fonction perturbations
+#'   \item \code{influencefn_pvals} p-values obtained from influence function perturbations
 #'   with the covariates as columns and the \code{thresholds} as rows, with an additional row 
 #'   at the top for the combination 
 #'   \item \code{wald_pvals} a matrix containing the p-values obtained from the Wald 

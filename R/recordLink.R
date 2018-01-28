@@ -44,7 +44,7 @@
 #@param eps_inf discrepancy rate for the differentiable variables
 #'
 #'@references Hejblum BP, Weber G, Liao KP, Palmer N, Churchill S, Szolovits P, Murphy S, Kohane I, Cai T 
-#'Probabilistic Record Linkage of De-Identified Research Datasets Using Diagnosis Codes, \emph{submitted}, 2016.
+#'Probabilistic Record Linkage of De-Identified Research Datasets Using Diagnosis Codes, \emph{submitted}, 2017.
 #'
 #'@importFrom landpred VTM
 #'@importFrom fGarch dsstd sstdFit

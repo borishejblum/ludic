@@ -7,7 +7,7 @@
 comb_pvals(pv)
 }
 \arguments{
-\item{pv}{the vector of p-values to be combiend together}
+\item{pv}{the vector of p-values to be combined together}
 }
 \value{
 the Fisher combination of the p-values. See Details.

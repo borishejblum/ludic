@@ -24,7 +24,7 @@ to use to call a match. Default is \code{seq(from = 0.5, to = 0.95, by = 0.05)}.
 Default is 200.}
 
 \item{dist_family}{a character string indicating the distribution family for the glm. 
-Currently, only \code{'gaussian'} and  \code{'binomial'} are suspported. Default 
+Currently, only \code{'gaussian'} and  \code{'binomial'} are supported. Default 
 is \code{'gaussian'}.}
 
 \item{impute_strategy}{a character string indicating which strategy to use to impute x 
@@ -37,7 +37,7 @@ one match with a posterior probability above the threshold). Default is
 \value{
 a list containing the following:
 \itemize{
-  \item \code{influencefn_pvals} p-values obtained from influence fonction perturbations
+  \item \code{influencefn_pvals} p-values obtained from influence function perturbations
   with the covariates as columns and the \code{thresholds} as rows, with an additional row 
   at the top for the combination 
   \item \code{wald_pvals} a matrix containing the p-values obtained from the Wald 
@@ -60,7 +60,7 @@ a list containing the following:
 }
 \description{
 Computes association test p-values from a generalized linear model for each considered 
-threshold, and computes a p-value for the combination of all the envisionned thresholds 
+threshold, and computes a p-value for the combination of all the envisioned thresholds 
 through Fisher's method using perturbation resampling.
 }
 \examples{

@@ -78,5 +78,5 @@ round(res[c(1:3, 19:23), c(1:3, 19:23)], 3)
 }
 \references{
 Hejblum BP, Weber G, Liao KP, Palmer N, Churchill S, Szolovits P, Murphy S, Kohane I, Cai T 
-Probabilistic Record Linkage of De-Identified Research Datasets Using Diagnosis Codes, \emph{submitted}, 2016.
+Probabilistic Record Linkage of De-Identified Research Datasets Using Diagnosis Codes, \emph{submitted}, 2017.
 }
