@@ -1,8 +1,8 @@
 Package: ludic
 Type: Package
 Title: Linkage Using Diagnosis Codes
-Version: 0.1.6
-Date: 2018-01-28
+Version: 0.1.9000
+Date: 2018-XX-XX
 Author: Boris Hejblum, Tianxi Cai
 Maintainer: Boris Hejblum <bhejblum@hsph.harvard.edu>
 LinkingTo: Rcpp, RcppArmadillo
