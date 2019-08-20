@@ -20,9 +20,10 @@ files](https://cran.r-project.org/package=ludic), the following article
 explains what `ludic` is about:
 
 > Hejblum BP, Weber G, Liao KP, Palmer N, Churchill S, Szolovits P,
-> Murphy S, Kohane I, Cai T (2019) Probabilistic Record Linkage of
-> De-Identified Research Datasets Using Diagnosis Codes. Scientific
-> Data, 6:180298. \<doi: 10.1038/sdata.2018.298\>.
+> Murphy S, Kohane I, Cai T (2019). Probabilistic Record Linkage of
+> De-Identified Research Datasets Using Diagnosis Codes. *Scientific
+> Data*, **6**:180298.
+> [\<doi: 10.1038/sdata.2018.298\>](https://doi.org/10.1038/sdata.2018.298).
 
 ## Installation
 
