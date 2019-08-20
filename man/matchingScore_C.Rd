@@ -25,8 +25,6 @@ matchingScore_C_sparse_big(mat_A, mat_B, m, u)
 \item{mat_B}{a \code{nA x K} matrix of the database into which a match is looked for.}
 }
 \description{
-Fast C++ computation of the final posterior probabilities in the E-M Winkler's method
-
 \code{matchingScore_C_sparse_big} implements a version using sparse matrices. It has a better 
 management of memory but is a little bit slower (indicated for big matrices)
 }

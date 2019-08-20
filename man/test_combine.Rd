@@ -4,8 +4,8 @@
 \alias{test_combine}
 \title{Association testing by combining several matching thresholds}
 \usage{
-test_combine(match_prob, y, x, thresholds = seq(from = 0.5, to = 0.95, by =
-  0.05), nb_perturb = 200, dist_family = c("gaussian", "binomial"),
+test_combine(match_prob, y, x, thresholds = seq(from = 0.5, to = 0.95, by
+  = 0.05), nb_perturb = 200, dist_family = c("gaussian", "binomial"),
   impute_strategy = c("weighted average", "best"))
 }
 \arguments{

@@ -44,7 +44,4 @@ variables
 
 \code{loglikC_bin_wDates} implements a C++ implementation of the pseudo-likelihood computation for binary
 variables with dates
-
-Fast C++ implementation of the log-likelihood ratio computation for 
-differentiating variables
 }

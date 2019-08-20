@@ -4,9 +4,10 @@
 \alias{recordLink}
 \title{Probabilistic Patient Record Linkage}
 \usage{
-recordLink(data1, data2, dates1 = NULL, dates2 = NULL, eps_plus, eps_minus,
-  aggreg_2ways = "mean", min_prev = 0.01, data1_cont2diff = NULL,
-  data2_cont2diff = NULL, d_max, use_diff = TRUE)
+recordLink(data1, data2, dates1 = NULL, dates2 = NULL, eps_plus,
+  eps_minus, aggreg_2ways = "mean", min_prev = 0.01,
+  data1_cont2diff = NULL, data2_cont2diff = NULL, d_max,
+  use_diff = TRUE)
 }
 \arguments{
 \item{data1}{either a binary (\code{1} or \code{0} values only) matrix or binary 

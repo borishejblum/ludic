@@ -8,8 +8,8 @@
 em_winkler(data1, data2, tol = 0.001, maxit = 500, do_plot = TRUE,
   oneone = FALSE, verbose = FALSE)
 
-em_winkler_big(data1, data2, tol = 0.001, maxit = 500, do_plot = TRUE,
-  oneone = FALSE, verbose = FALSE)
+em_winkler_big(data1, data2, tol = 0.001, maxit = 500,
+  do_plot = TRUE, oneone = FALSE, verbose = FALSE)
 }
 \arguments{
 \item{data1}{either a binary (\code{1} or \code{0} values only) matrix or binary 
@@ -25,7 +25,7 @@ data frame of dimension \code{n2 x K} whose rownames are the observation identif
 \item{do_plot}{a logical flag indicating whether a plot should be drawn for the EM convergence. 
 Default is \code{TRUE}.}
 
-\item{oneone}{a logical flag indicating whether one-one matching should be enforced. 
+\item{oneone}{a logical flag indicating whether 1-1 matching should be enforced. 
 If \code{TRUE}, then returned \code{matchingScores} are only kept for the maximum 
 score per column while lower scores are replace by \code{threshold-1}. 
 Default is \code{FALSE} in which case original \code{matchingScores} are returned.}
@@ -44,8 +44,6 @@ considered multiplied by \code{p} the estimated proportion of true matches from 
 }
 }
 \description{
-Implementation of Winkler's EM algorithm for Fellegi-Sunter matching method
-
 \code{em_winkler_big} implements the same method when the data are too big to compute 
 the agreement matrix. Agreement is then recomputed on the fly each time it is needed. The EM steps 
 are completely done in C++. This decreases the RAM usage (still important though), at the cost of 

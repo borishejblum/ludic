@@ -13,7 +13,7 @@
 #'@param do_plot a logical flag indicating whether a plot should be drawn for the EM convergence. 
 #'Default is \code{TRUE}.
 #'
-#'@param oneone a logical flag indicating whether one-one matching should be enforced. 
+#'@param oneone a logical flag indicating whether 1-1 matching should be enforced. 
 #'If \code{TRUE}, then returned \code{matchingScores} are only kept for the maximum 
 #'score per column while lower scores are replace by \code{threshold-1}. 
 #'Default is \code{FALSE} in which case original \code{matchingScores} are returned.
@@ -180,7 +180,8 @@ em_winkler<-function(data1, data2, tol=0.001, maxit=500, do_plot=TRUE, oneone=FA
   }
   
   
-  return(list("matchingScore"=ms, "threshold_ms"=threshold, "estim_nbmatch"=n_truematches, "convergence_status"=conv_flag))
+  return(list("matchingScore"=ms, "threshold_ms"=threshold, "estim_nbmatch"=n_truematches, "convergence_status"=conv_flag, 
+              "m"=m, "u"=u, "p"=p))
 }
 
 
@@ -296,7 +297,8 @@ em_winkler_big<-function(data1, data2, tol=0.001, maxit=500, do_plot=TRUE, oneon
     rm(col_max_mat)
   }
   
-  return(list("matchingScore"=ms, "threshold_ms"=threshold, "estim_nbmatch"=n_truematches, "convergence_status"=conv_flag))
+  return(list("matchingScore"=ms, "threshold_ms"=threshold, "estim_nbmatch"=n_truematches, "convergence_status"=conv_flag, 
+              "m"=m, "u"=u, "p"=p))
 }
 
 

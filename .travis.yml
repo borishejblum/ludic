@@ -29,9 +29,7 @@ r_packages:
 - Rcpp
 - RcppArmadillo
 - testthat
-
-r_github_packages:
-  - jimhester/covr
+- covr
 
 after_success:
   - Rscript -e 'covr::codecov(type ="all")'

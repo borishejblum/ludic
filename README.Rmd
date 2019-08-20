@@ -27,9 +27,10 @@ knitr::opts_chunk$set(
 the use of diagnosis codes only, in the absence of direct identifiers.
 On top of the [CRAN help files](https://cran.r-project.org/package=ludic), the following article explains what `ludic` is about:
 
-> BP Hejblum, G Weber, KP Liao, N Palmer, S Churchill, P Szolovits, S Murphy, I Kohane, 
-T Cai, Probabilistic Record Linkage of De-Identified Research Datasets Using Diagnosis 
-Codes, 2017, *submitted*.
+> Hejblum BP, Weber G, Liao KP, Palmer N, Churchill S, Szolovits P, Murphy S, 
+Kohane I, Cai T (2019) Probabilistic Record Linkage of De-Identified Research 
+Datasets Using Diagnosis Codes. Scientific Data, 6:180298. 
+<doi: 10.1038/sdata.2018.298>.
 
 
 ## Installation
