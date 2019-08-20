@@ -1,9 +1,9 @@
 # News about the `ludic` R package
 
 
-### Main changes in Version 0.1.9000 (2017-XX-XX):
+### Main changes in Version 0.1.7 (2019-08-20):
 
-* *test_combine* function performs probabilistic association testing  
+* *test_combine()* function performs probabilistic association testing  
 
 
 ### Main changes in Version 0.1.6 (2017-01-28):
