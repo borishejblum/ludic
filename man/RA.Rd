@@ -45,7 +45,7 @@ allow the benchmarking of methods for probabilistic record linkage using diagnos
 }
 \examples{
 
-\dontrun{ 
+if(interactive()){
 rm(list=ls())
 library(ludic)
 data(RA)
