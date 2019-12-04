@@ -48,12 +48,13 @@
 #'em_winkler(mat1, mat2)
 #'
 #'@importFrom Matrix Matrix
+#'@importFrom methods is
 #'
 #'@export
 em_winkler<-function(data1, data2, tol=0.001, maxit=500, do_plot=TRUE, oneone=FALSE, verbose=FALSE){#}, sens_thres=0.99, spec_thres=0.99){
   
-  stopifnot(is(data1, "matrix"))
-  stopifnot(is(data2, "matrix"))
+  stopifnot(methods::is(data1, "matrix"))
+  stopifnot(methods::is(data2, "matrix"))
   stopifnot(data1%in%c(0,1))
   stopifnot(data2%in%c(0,1))
   
@@ -193,13 +194,15 @@ em_winkler<-function(data1, data2, tol=0.001, maxit=500, do_plot=TRUE, oneone=FA
 #'are completely done in C++. This decreases the RAM usage (still important though), at the cost of 
 #'increasing computational time.
 #'
+#'@importFrom methods is
+#'
 #'@rdname em_winkler
 #'
 #'@export
 em_winkler_big<-function(data1, data2, tol=0.001, maxit=500, do_plot=TRUE, oneone=FALSE, verbose=FALSE){#}, sens_thres=0.99, spec_thres=0.99){
   
-  stopifnot(is(data1, "matrix"))
-  stopifnot(is(data2, "matrix"))
+  stopifnot(methods::is(data1, "matrix"))
+  stopifnot(methods::is(data2, "matrix"))
   stopifnot(data1%in%c(0,1))
   stopifnot(data2%in%c(0,1))
   
