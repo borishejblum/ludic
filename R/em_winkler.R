@@ -52,8 +52,8 @@
 #'@export
 em_winkler<-function(data1, data2, tol=0.001, maxit=500, do_plot=TRUE, oneone=FALSE, verbose=FALSE){#}, sens_thres=0.99, spec_thres=0.99){
   
-  stopifnot(class(data1)=="matrix")
-  stopifnot(class(data2)=="matrix")
+  stopifnot(is(data1, "matrix"))
+  stopifnot(is(data2, "matrix"))
   stopifnot(data1%in%c(0,1))
   stopifnot(data2%in%c(0,1))
   
@@ -198,8 +198,8 @@ em_winkler<-function(data1, data2, tol=0.001, maxit=500, do_plot=TRUE, oneone=FA
 #'@export
 em_winkler_big<-function(data1, data2, tol=0.001, maxit=500, do_plot=TRUE, oneone=FALSE, verbose=FALSE){#}, sens_thres=0.99, spec_thres=0.99){
   
-  stopifnot(class(data1)=="matrix")
-  stopifnot(class(data2)=="matrix")
+  stopifnot(is(data1, "matrix"))
+  stopifnot(is(data2, "matrix"))
   stopifnot(data1%in%c(0,1))
   stopifnot(data2%in%c(0,1))
   
