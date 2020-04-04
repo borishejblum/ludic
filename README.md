@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# `ludic`
+# `ludic` <a><img src='man/figures/logo.svg' align="right" height="139" /></a>
 
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/ludic)](https://cran.r-project.org/package=ludic)
 [![Travis-CI Build
