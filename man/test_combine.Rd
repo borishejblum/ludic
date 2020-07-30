@@ -4,9 +4,15 @@
 \alias{test_combine}
 \title{Association testing by combining several matching thresholds}
 \usage{
-test_combine(match_prob, y, x, thresholds = seq(from = 0.5, to = 0.95, by
-  = 0.05), nb_perturb = 200, dist_family = c("gaussian", "binomial"),
-  impute_strategy = c("weighted average", "best"))
+test_combine(
+  match_prob,
+  y,
+  x,
+  thresholds = seq(from = 0.5, to = 0.95, by = 0.05),
+  nb_perturb = 200,
+  dist_family = c("gaussian", "binomial"),
+  impute_strategy = c("weighted average", "best")
+)
 }
 \arguments{
 \item{match_prob}{matching probabilities matrix (e.g. obtained through \code{\link{recordLink}}) of 
@@ -15,7 +21,7 @@ dimensions \code{n1 x n2}.}
 \item{y}{response variable of length \code{n1}. Only binary phenotypes are supported at the moment.}
 
 \item{x}{a \code{matrix} or a \code{data.frame} of predictors of dimensions \code{n2 x p}. 
-An intercept is automatically within the function.}
+An intercept is automatically added within the function.}
 
 \item{thresholds}{a vector (possibly of length \code{1}) containing the different threshold 
 to use to call a match. Default is \code{seq(from = 0.5, to = 0.95, by = 0.05)}.}
@@ -78,7 +84,7 @@ match_prob <- matrix(rbeta(n=103*99, 1, 2), nrow=103, ncol=99)
 #res[[n]] <- test_combine(match_prob, y, x, dist_family="gaussian")$influencefn_pvals
 y <- rbinom(n=103, 1, prob=0.5)
 res[[n]] <- test_combine(match_prob, y, x, dist_family="binomial")$influencefn_pvals
-cat(n, "/", n_sims, "\\n", sep="")
+cat(n, "/", n_sims, "\n", sep="")
 }
 size <- matrix(NA, ncol=nrow(res[[1]]), nrow=ncol(res[[1]])-2)
 colnames(size) <- rownames(res[[1]])

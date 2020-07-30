@@ -18,9 +18,6 @@ expit_dev1(x)
 
 \item{x}{a real number in ]-infinity,infinity[ to be transformed to the 
 probability scale ( [0,1] )}
-
-\item{x}{a real number in ]-infinity,infinity[ to be transformed to the 
-probability scale ( [0,1] )}
 }
 \description{
 inverse of the logistic transformation function

@@ -10,7 +10,7 @@
 #'@param y response variable of length \code{n1}. Only binary phenotypes are supported at the moment.
 #'
 #'@param x a \code{matrix} or a \code{data.frame} of predictors of dimensions \code{n2 x p}. 
-#'An intercept is automatically within the function.
+#'An intercept is automatically added within the function.
 #'
 #'@param thresholds a vector (possibly of length \code{1}) containing the different threshold 
 #'to use to call a match. Default is \code{seq(from = 0.5, to = 0.95, by = 0.05)}.

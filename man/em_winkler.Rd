@@ -5,11 +5,25 @@
 \alias{em_winkler_big}
 \title{Implementation of Winkler's EM algorithm for Fellegi-Sunter matching method}
 \usage{
-em_winkler(data1, data2, tol = 0.001, maxit = 500, do_plot = TRUE,
-  oneone = FALSE, verbose = FALSE)
+em_winkler(
+  data1,
+  data2,
+  tol = 0.001,
+  maxit = 500,
+  do_plot = TRUE,
+  oneone = FALSE,
+  verbose = FALSE
+)
 
-em_winkler_big(data1, data2, tol = 0.001, maxit = 500,
-  do_plot = TRUE, oneone = FALSE, verbose = FALSE)
+em_winkler_big(
+  data1,
+  data2,
+  tol = 0.001,
+  maxit = 500,
+  do_plot = TRUE,
+  oneone = FALSE,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{data1}{either a binary (\code{1} or \code{0} values only) matrix or binary 

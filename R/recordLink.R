@@ -4,7 +4,8 @@
 #'data frame of dimension \code{n1 x K} whose rownames are the observation identifiers.
 #'
 #'@param data2 either a binary (\code{1} or \code{0} values only) matrix or a binary
-#'data frame of dimension \code{n2 x K} whose rownames are the observation identifiers.
+#'data frame of dimension \code{n2 x K} whose rownames are the observation identifiers. 
+#'Columns should be in the same order as in \code{data1}.
 #'
 #'@param data1_cont2diff either a matrix or dataframe of continuous features, 
 #'such as age, for which the similarity measure uses the difference with 
@@ -108,11 +109,11 @@ recordLink <- function(data1, data2, dates1 = NULL, dates2 = NULL,
   ind2 <- rownames(data2)
   
   freq_select <- (colMeans(data1) > min_prev)
-  data1_bin <- data1[,freq_select, drop=FALSE]
-  data2_bin <- data2[,freq_select, drop=FALSE]
+  data1_bin <- data1[, freq_select, drop=FALSE]
+  data2_bin <- data2[, freq_select, drop=FALSE]
   if(datesNotNull){
-    dates1_fs <- dates1[,freq_select, drop=FALSE]
-    dates2_fs <- dates2[,freq_select, drop=FALSE]
+    dates1_fs <- dates1[, freq_select, drop=FALSE]
+    dates2_fs <- dates2[, freq_select, drop=FALSE]
   }
   #rm(list=c("data1", "data2"))
   #n_freq10 <- sum(colSums(data1_bin)/nrow(data1_bin)<0.10 | colSums(data1_bin)/nrow(data1_bin)>0.90)
