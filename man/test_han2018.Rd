@@ -24,7 +24,7 @@ are supported at the moment.}
 An intercept is automatically added within the function.}
 
 \item{jackknife_nrep}{the number of jackknife repetitions.
-Default is 100.}
+Default is 100 (from Han et al.).}
 
 \item{methods}{a character vector which must be a subset of \code{("F", "M", "M2")} 
 indicating which estimator from Han et al. 2018 should be computed. Default is all 3.}
