@@ -140,7 +140,12 @@ test_han2018 <- function(match_prob, y, x,
     )}
   )
   
+  
+  
   res <- list()
+  
+  
+  
   if("F" %in% methods){
     betaF <- rootSolve::multiroot(f = function(b){est_eq(beta = b, x = x, y = y, match_prob = match_prob)},
                                   start = rep(0, times = p))$root
@@ -161,6 +166,9 @@ test_han2018 <- function(match_prob, y, x,
                        "zscore" = zscoreF, "pval" = 2*(1-pnorm(abs(zscoreF))))
     
   }
+  
+  
+  
   if("M" %in% methods){
     match_probM <- matrix(0, nrow = n1, ncol = n2)
     imax <- max.col(match_prob)
@@ -191,26 +199,35 @@ test_han2018 <- function(match_prob, y, x,
     res[["M"]] <- list("beta" = betaM, "varcov" = varcovM, 
                        "zscore" = zscoreM, "pval" = 2*(1-pnorm(abs(zscoreM))))
   }
+  
+  
+  
   if("M2" %in% methods){
+    
     match_probM2 <- matrix(0, nrow = n1, ncol = n2)
     imax <- max.col(match_prob)
+    match_prob_bis <- match_prob
+    match_prob_bis[cbind(seq_len(n1), imax)] <- -Inf
+    imax2 <- max.col(match_prob_bis)
     for(i in seq_len(n1)){
-      imax2 <- which.max(match_prob[i,-imax[i]])
       match_probM2[i, imax[i]] <- match_prob[i, imax[i]]
-      match_probM2[, -imax[i]][i, imax2] <- match_prob[i, -imax[i]][imax2]
+      match_probM2[i, imax2[i]] <- match_prob[i, imax2[i]]
     }
     betaM2 <- rootSolve::multiroot(f = function(b){est_eq(beta = b, x = x, y = y, match_prob = match_probM2)},
                                    start = rep(0, times = p))$root
     betaM2_b <- matrix(NA, nrow = jackknife_nrep, ncol = p)
+    
     for(j in 1:jackknife_nrep){
       match_probM2 <- matrix(0, nrow = n1-jackknife_blocksize, ncol = n2-jackknife_blocksize)
       match_prob_temp = match_prob[-samples2jackknife[[j]][, 1],
                                    -samples2jackknife[[j]][, 2]]
       imax <- max.col(match_prob_temp)
+      match_prob_temp_bis <- match_prob_temp
+      match_prob_temp_bis[cbind(seq_len(nrow(match_prob_temp)), imax)] <- -Inf
+      imax2 <- max.col(match_prob_temp_bis)
       for(i in seq_len(nrow(match_prob_temp))){
-        imax2 <- which.max(match_prob_temp[i,-imax[i]])
         match_probM2[i, imax[i]] <- match_prob_temp[i, imax[i]]
-        match_probM2[, -imax[i]][i, imax2] <- match_prob_temp[i, -imax[i]][imax2]
+        match_probM2[i, imax2[i]] <- match_prob_temp[i, imax2[i]]
       }
       betaM2_b[j, ] <- rootSolve::multiroot(f = function(b){est_eq(beta = b, 
                                                                    x = x[-samples2jackknife[[j]][, 2], , drop = FALSE], 
