@@ -9,6 +9,7 @@ test_han2018(
   y,
   x,
   jackknife_nrep = 100,
+  jackknife_blocksize = max(floor(min(length(y), nrow(x))/jackknife_nrep), 1),
   methods = c("F", "M", "M2"),
   dist_family = c("gaussian", "binomial")
 )
@@ -25,6 +26,8 @@ An intercept is automatically added within the function.}
 
 \item{jackknife_nrep}{the number of jackknife repetitions.
 Default is 100 (from Han et al.).}
+
+\item{jackknife_blocksize}{the number of observations to remove in each jackknife.}
 
 \item{methods}{a character vector which must be a subset of \code{("F", "M", "M2")} 
 indicating which estimator from Han et al. 2018 should be computed. Default is all 3.}
@@ -48,7 +51,7 @@ Association testing using Han & Lahiri estimating equations and jackknife approa
 \examples{
 #rm(list=ls())
 res <- list()
-n_sims <- 1#5000
+n_sims <- 1#500
 for(n in 1:n_sims){
 x <- matrix(ncol=2, nrow=99, stats::rnorm(n=99*2))
 
@@ -57,13 +60,17 @@ match_prob <- matrix(rbeta(n=103*99, 1, 2), nrow=103, ncol=99)
 
 
 y <- rnorm(n=103, 1, 0.5)
-res[[n]] <- test_han2018(match_prob, y, x)
+res[[n]] <- test_han2018(match_prob, y, x, jackknife_blocksize = 10)
 #y <- rbinom(n=103, 1, prob=0.5)
 #res[[n]] <- test_han2018(match_prob, y, x, dist_family = "binomial")
 cat(n, "/", n_sims, "\n", sep="")
 }
-pvals <- sapply(lapply(res, "[[", "M2"), "[[", "pval")
-rowMeans(pvals<0.05)
+pvals_F <- sapply(lapply(res, "[[", "F"), "[[", "pval")
+pvals_M <- sapply(lapply(res, "[[", "M"), "[[", "pval")
+pvals_M2 <- sapply(lapply(res, "[[", "M2"), "[[", "pval")
+rowMeans(pvals_F<0.05)
+rowMeans(pvals_M<0.05)
+rowMeans(pvals_M2<0.05)
 
 }
 \references{

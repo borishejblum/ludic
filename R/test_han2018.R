@@ -12,6 +12,8 @@
 #'@param jackknife_nrep the number of jackknife repetitions.
 #'Default is 100 (from Han et al.).
 #'
+#'@param jackknife_blocksize the number of observations to remove in each jackknife.
+#'
 #'@param dist_family a character string indicating the distribution family for the glm. 
 #'Currently, only \code{'gaussian'} and  \code{'binomial'} are supported. Default 
 #'is \code{'gaussian'}.
@@ -38,7 +40,7 @@
 #'@examples
 #'#rm(list=ls())
 #'res <- list()
-#'n_sims <- 1#5000
+#'n_sims <- 1#500
 #'for(n in 1:n_sims){
 #'x <- matrix(ncol=2, nrow=99, stats::rnorm(n=99*2))
 #'
@@ -47,17 +49,22 @@
 #'
 #'
 #'y <- rnorm(n=103, 1, 0.5)
-#'res[[n]] <- test_han2018(match_prob, y, x)
+#'res[[n]] <- test_han2018(match_prob, y, x, jackknife_blocksize = 10)
 #'#y <- rbinom(n=103, 1, prob=0.5)
 #'#res[[n]] <- test_han2018(match_prob, y, x, dist_family = "binomial")
 #'cat(n, "/", n_sims, "\n", sep="")
 #'}
-#'pvals <- sapply(lapply(res, "[[", "M2"), "[[", "pval")
-#'rowMeans(pvals<0.05)
+#'pvals_F <- sapply(lapply(res, "[[", "F"), "[[", "pval")
+#'pvals_M <- sapply(lapply(res, "[[", "M"), "[[", "pval")
+#'pvals_M2 <- sapply(lapply(res, "[[", "M2"), "[[", "pval")
+#'rowMeans(pvals_F<0.05)
+#'rowMeans(pvals_M<0.05)
+#'rowMeans(pvals_M2<0.05)
 #'
 
 test_han2018 <- function(match_prob, y, x,
                          jackknife_nrep = 100, 
+                         jackknife_blocksize = max(floor(min(length(y), nrow(x))/jackknife_nrep), 1) ,
                          methods = c("F", "M", "M2"), 
                          dist_family = c("gaussian", "binomial")
 ){
@@ -81,7 +88,7 @@ test_han2018 <- function(match_prob, y, x,
   if(is.data.frame(x)){
     x <- stats::model.matrix(stats::as.formula(paste0("~", paste(colnames(x), collapse=" + "))), data = x)[, -1, drop = FALSE]
   }else if(is.matrix(x)){
-    warning()
+    #warning("'x' is a matrix, it is assume to be as would be output from stats::model.matrix()")
     if(all(x[,1]==1) | ifelse(!is.null(colnames(x)), colnames(x)[1] == "(Intercept)", FALSE)){
       x <- x[, -1, drop = FALSE]
     }
@@ -125,21 +132,25 @@ test_han2018 <- function(match_prob, y, x,
     stop("'gaussian' or 'binomial' are the only valid values for dist_family currently supported")
   }
   
-  samples2jackknife <- cbind(sample(n1, size=jackknife_nrep, replace=TRUE), 
-                             sample(n2, size=jackknife_nrep, replace=TRUE))
+  #samples2jackknife <- cbind(sample(n1, size=jackknife_nrep, replace=TRUE), 
+  #                           sample(n2, size=jackknife_nrep, replace=TRUE))
+  samples2jackknife <- lapply(seq_len(jackknife_nrep), function(x){
+    cbind(sample(n1, jackknife_blocksize, replace=FALSE),
+          sample(n2, jackknife_blocksize, replace=FALSE)
+    )}
+  )
   
   res <- list()
-  
   if("F" %in% methods){
     betaF <- rootSolve::multiroot(f = function(b){est_eq(beta = b, x = x, y = y, match_prob = match_prob)},
                                   start = rep(0, times = p))$root
     betaF_b <- matrix(NA, nrow = jackknife_nrep, ncol = p)
     for(j in 1:jackknife_nrep){
       betaF_b[j, ] <- rootSolve::multiroot(f = function(b){est_eq(beta = b, 
-                                                                  x = x[-samples2jackknife[j, 2], , drop = FALSE], 
-                                                                  y = y[-samples2jackknife[j, 1]], 
-                                                                  match_prob = match_prob[-samples2jackknife[j, 1],
-                                                                                          -samples2jackknife[j, 2]])},
+                                                                  x = x[-samples2jackknife[[j]][, 2], , drop = FALSE], 
+                                                                  y = y[-samples2jackknife[[j]][, 1]], 
+                                                                  match_prob = match_prob[-samples2jackknife[[j]][, 1],
+                                                                                          -samples2jackknife[[j]][, 2]])},
                                            start = rep(0, times = p))$root
     }
     errF <- betaF_b - matrix(colMeans(betaF_b), nrow= jackknife_nrep, ncol=p, byrow = TRUE)
@@ -159,17 +170,17 @@ test_han2018 <- function(match_prob, y, x,
     betaM <- rootSolve::multiroot(f = function(b){est_eq(beta = b, x = x, y = y, match_prob = match_probM)},
                                   start = rep(0, times = p))$root
     betaM_b <- matrix(NA, nrow = jackknife_nrep, ncol = p)
-    for(j in 1:jackknife_nrep){
-      match_probM <- matrix(0, nrow = n1-1, ncol = n2-1)
-      match_prob_temp = match_prob[-samples2jackknife[j, 1],
-                                   -samples2jackknife[j, 2]]
+    for(j in seq_len(jackknife_nrep)){
+      match_probM <- matrix(0, nrow = n1-jackknife_blocksize, ncol = n2-jackknife_blocksize)
+      match_prob_temp = match_prob[-samples2jackknife[[j]][, 1],
+                                   -samples2jackknife[[j]][, 2]]
       imax <- max.col(match_prob_temp)
-      for(i in 1:(n1-1)){
+      for(i in seq_len(nrow(match_prob_temp))){
         match_probM[i, imax[i]] <- match_prob_temp[i, imax[i]] 
       }
       betaM_b[j, ] <- rootSolve::multiroot(f = function(b){est_eq(beta = b,
-                                                                  x = x[-samples2jackknife[j, 2], , drop = FALSE],
-                                                                  y = y[-samples2jackknife[j, 1]], 
+                                                                  x = x[-samples2jackknife[[j]][, 2], , drop = FALSE],
+                                                                  y = y[-samples2jackknife[[j]][, 1]], 
                                                                   match_prob = match_probM)},
                                            start = rep(0, times = p))$root
     }
@@ -183,7 +194,7 @@ test_han2018 <- function(match_prob, y, x,
   if("M2" %in% methods){
     match_probM2 <- matrix(0, nrow = n1, ncol = n2)
     imax <- max.col(match_prob)
-    for(i in 1:n1){
+    for(i in seq_len(n1)){
       imax2 <- which.max(match_prob[i,-imax[i]])
       match_probM2[i, imax[i]] <- match_prob[i, imax[i]]
       match_probM2[, -imax[i]][i, imax2] <- match_prob[i, -imax[i]][imax2]
@@ -192,18 +203,18 @@ test_han2018 <- function(match_prob, y, x,
                                    start = rep(0, times = p))$root
     betaM2_b <- matrix(NA, nrow = jackknife_nrep, ncol = p)
     for(j in 1:jackknife_nrep){
-      match_probM2 <- matrix(0, nrow = n1-1, ncol = n2-1)
-      match_prob_temp = match_prob[-samples2jackknife[j, 1],
-                                   -samples2jackknife[j, 2]]
+      match_probM2 <- matrix(0, nrow = n1-jackknife_blocksize, ncol = n2-jackknife_blocksize)
+      match_prob_temp = match_prob[-samples2jackknife[[j]][, 1],
+                                   -samples2jackknife[[j]][, 2]]
       imax <- max.col(match_prob_temp)
-      for(i in 1:(n1-1)){
+      for(i in seq_len(nrow(match_prob_temp))){
         imax2 <- which.max(match_prob_temp[i,-imax[i]])
         match_probM2[i, imax[i]] <- match_prob_temp[i, imax[i]]
         match_probM2[, -imax[i]][i, imax2] <- match_prob_temp[i, -imax[i]][imax2]
       }
       betaM2_b[j, ] <- rootSolve::multiroot(f = function(b){est_eq(beta = b, 
-                                                                   x = x[-samples2jackknife[j, 2], , drop = FALSE], 
-                                                                   y = y[-samples2jackknife[j, 1]], 
+                                                                   x = x[-samples2jackknife[[j]][, 2], , drop = FALSE], 
+                                                                   y = y[-samples2jackknife[[j]][, 1]], 
                                                                    match_prob = match_probM2)},
                                             start = rep(0, times = p))$root
     }
