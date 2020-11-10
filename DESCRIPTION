@@ -25,4 +25,4 @@ Description: Probabilistic record linkage without direct identifiers using only
 BugReports: https://github.com/borishejblum/ludic/issues
 License: MIT + file LICENSE
 Encoding: UTF-8
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1

@@ -8,6 +8,7 @@ test_combine(
   match_prob,
   y,
   x,
+  covar = NULL,
   thresholds = seq(from = 0.5, to = 0.95, by = 0.05),
   nb_perturb = 200,
   dist_family = c("gaussian", "binomial"),
@@ -22,6 +23,10 @@ dimensions \code{n1 x n2}.}
 
 \item{x}{a \code{matrix} or a \code{data.frame} of predictors of dimensions \code{n2 x p}. 
 An intercept is automatically added within the function.}
+
+\item{covar}{a \code{matrix} or a \code{data.frame} of variables to be adjusted on
+in the test of dimensions \code{n3 x p}. 
+Default is \code{NULL} in which case there is no adjustment.}
 
 \item{thresholds}{a vector (possibly of length \code{1}) containing the different threshold 
 to use to call a match. Default is \code{seq(from = 0.5, to = 0.95, by = 0.05)}.}

@@ -12,6 +12,10 @@
 #'@param x a \code{matrix} or a \code{data.frame} of predictors of dimensions \code{n2 x p}. 
 #'An intercept is automatically added within the function.
 #'
+#'@param covar a \code{matrix} or a \code{data.frame} of variables to be adjusted on
+#'in the test of dimensions \code{n3 x p}. 
+#'Default is \code{NULL} in which case there is no adjustment.
+#'
 #'@param thresholds a vector (possibly of length \code{1}) containing the different threshold 
 #'to use to call a match. Default is \code{seq(from = 0.5, to = 0.95, by = 0.05)}.
 #'
@@ -84,7 +88,7 @@
 #'size
 #'
 
-test_combine_hz <- function(match_prob, y, x, covar,
+test_combine <- function(match_prob, y, x, covar = NULL,
                      thresholds = seq(from = 0.5, to = 0.95, by = 0.05), #c(0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.85, 0.9, 0.95),
                      nb_perturb = 200,
                      dist_family = c("gaussian", "binomial"),
@@ -144,55 +148,65 @@ test_combine_hz <- function(match_prob, y, x, covar,
   }
   stopifnot(impute_strategy %in% c("weighted average", "best"))
   
+  ncovvar <- ncol(covar)
+  if(is.null(ncovvar)){
+    ncovvar <- 0
+  }
+  
   # initializing results
   eta <- list()
-  ncoef <- ncol(x) + 1 + ncol(covar)
-  theta_avg <- matrix(NA, ncol = ncoef, nrow = length(thresholds))
+  ncoef <- ncol(x) + 1 + ncovvar
+  theta_avg <- matrix(NA, ncol = ncoef, nrow = nb_thresholds)
   rownames(theta_avg) <- as.character(thresholds)
-  wald_pvals <- matrix(NA, ncol = ncoef, nrow = length(thresholds))
+  wald_pvals <- matrix(NA, ncol = ncoef, nrow = nb_thresholds)
   rownames(wald_pvals) <- as.character(thresholds)
-  SE = matrix(NA, ncol=ncoef, nrow = length(thresholds))
-  rownames(SE) = as.character(thresholds)
+  se <- matrix(NA, ncol = ncoef, nrow = nb_thresholds)
+  rownames(se) <- as.character(thresholds)
   
-  for(i in 1:length(thresholds)){
-    covar_junk = covar
-    cut_p = thresholds[i]
-    prob_sup_cut = (match_prob > cut_p)
+  for(i in 1:nb_thresholds){
+    covar_junk <- covar
+    cut_p <- thresholds[i]
+    prob_sup_cut <- (match_prob > cut_p)
     
     #construct the data-frame for the glm
-    #gives the rows that have at least 1 match at threshold
+    #gives the rows that have at least 1 match above threshold
     xi <- rowSums(prob_sup_cut) > 0
-    #number of rows w/ match
+    #number of rows with match
     n_rho <- sum(xi)
     
     y_match <- y*xi
     
-    #this is somewhat of an identity matrix * probabilitites matrix to keep probs only in rows w/ 1 above threshold
+    #this is somewhat of an identity matrix * probabilities matrix to keep probs 
+    #only in rows with 1 match above threshold
     match_prob_sel <-  diag(1*xi) %*% match_prob
     if(impute_strategy == "best"){
       xi_NA <- xi
       xi_NA[!xi] <- NA
       x_impute <- diag(1*xi_NA) %*% x[max.col(match_prob_sel), ]
       #covar must have same length as outcomes length
-      covar_junk[is.na(x_impute), ] = NA
-      rownames(covar_junk) = c()
+      if(sum(is.na(x_impute))>0 && !is.null(covar_junk)){
+        covar_junk[is.na(x_impute), ] <- NA
+      }
+      rownames(covar_junk) <- NULL
     }else if(impute_strategy == "weighted average"){
-      x_impute = match_prob_sel %*% x[,] / rowSums(match_prob_sel) #diag(1/rowSums(match_prob_sel)) %*% match_prob_sel %*% x/rowSums(match_prob_sel)
-      covar_junk[is.na(x_impute), ] = NaN
-      rownames(covar_junk) = c()
+      x_impute <- match_prob_sel %*% x / rowSums(match_prob_sel) #diag(1/rowSums(match_prob_sel)) %*% match_prob_sel %*% x/rowSums(match_prob_sel)
+      if(sum(is.na(x_impute))>0 && !is.null(covar_junk)){
+        covar_junk[is.na(x_impute)] <- NA
+      }
+      rownames(covar_junk) <- NULL
     }else{
       stop("'strategy' is neither 'best' nor 'weighted average'")
     }
     
-    x_impute = cbind(x_impute, covar_junk)
-    x_impute =  as.matrix(x_impute)
-    
+    if(!is.null(covar_junk)){
+      x_impute <- cbind.data.frame(x_impute, covar_junk)
+    }    
     #y_match_sub <- y[xi]
     #x_best_sub <- x[max.col(match_prob[xi, ]), ]
-    #x_impute_sub <- match_prob[xi, ]%*%x/rowSums(match_prob[xi, ])
+    #x_impute_sub <- match_prob[xi, ] %*% x/rowSums(match_prob[xi, ])
     impute_fit_summary <- summary(stats::glm(y_match ~ x_impute, family = dist_family, na.action = stats::na.omit))
     theta_avg[i, ] <- impute_fit_summary$coef[, "Estimate", drop=FALSE]
-    SE[i, ] = impute_fit_summary$coef[, "Std. Error", drop=FALSE]
+    se[i, ] <- impute_fit_summary$coef[, "Std. Error", drop=FALSE]
     if(dist_family == "binomial"){
       wald_pvals[i, ] <- impute_fit_summary$coef[, "Pr(>|z|)", drop=FALSE]
     }else if(dist_family == "gaussian"){
@@ -205,7 +219,7 @@ test_combine_hz <- function(match_prob, y, x, covar,
     # eta[[as.character(cut_p)]] <- 1/n_rho*solve(I_rho)%*%t(Z_sub)%*%diag(x=(y_match_sub - expit(Z_sub%*%theta)[, "Estimate"]))
     # sqrt(apply(eta[[as.character(cut_p)]], 1, crossprod))
     
-    x_impute_noNA =  x_impute 
+    x_impute_noNA <- x_impute 
     x_impute_noNA[is.na(x_impute[, 1])] <- 0
     Z <- diag(xi) %*% stats::model.matrix( ~ x_impute_noNA)
     
@@ -226,7 +240,7 @@ test_combine_hz <- function(match_prob, y, x, covar,
   }
   colnames(theta_avg) <- rownames(impute_fit_summary$coefficients)
   colnames(wald_pvals) <- rownames(impute_fit_summary$coefficients)
-  colnames(SE) = rownames(impute_fit_summary$coefficients)
+  colnames(se) <- rownames(impute_fit_summary$coefficients)
   sigma <- list()
   sds <- matrix(ncol=ncol(theta_avg), nrow = length(thresholds))
   colnames(sds) <- colnames(theta_avg)
@@ -269,7 +283,7 @@ test_combine_hz <- function(match_prob, y, x, covar,
               "ptbed_pvals" = pvals_star,
               "theta_impute" = theta_avg,
               "sd_theta"=sds,
-              "std_error" = SE,
+              "std_error" = se,
               "ptbed_theta_impute" = theta_avg_star,
               "impute_strategy" = impute_strategy)
   )

@@ -86,12 +86,9 @@ test_han2018 <- function(match_prob, y, x,
   }
   
   if(is.data.frame(x)){
-    x <- stats::model.matrix(stats::as.formula(paste0("~", paste(colnames(x), collapse=" + "))), data = x)[, -1, drop = FALSE]
+    x <- stats::model.matrix(stats::as.formula(paste0("~", paste(colnames(x), collapse=" + "))), data = x)
   }else if(is.matrix(x)){
-    #warning("'x' is a matrix, it is assume to be as would be output from stats::model.matrix()")
-    if(all(x[,1]==1) | ifelse(!is.null(colnames(x)), colnames(x)[1] == "(Intercept)", FALSE)){
-      x <- x[, -1, drop = FALSE]
-    }
+    warning("'x' is a matrix, it is assume to be as would be output from stats::model.matrix()")
   }else{
     stop("x is neither a data.frame nor a matrix")
   }
