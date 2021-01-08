@@ -8,6 +8,8 @@ test_han2018(
   match_prob,
   y,
   x,
+  covar_y = NULL,
+  covar_x = NULL,
   jackknife_nrep = 100,
   jackknife_blocksize = max(floor(min(length(y), nrow(x))/jackknife_nrep), 1),
   methods = c("F", "M", "M2"),
@@ -22,6 +24,12 @@ dimensions \code{n1 x n2}.}
 are supported at the moment.}
 
 \item{x}{a \code{matrix} or a \code{data.frame} of predictors of dimensions \code{n2 x p}. 
+An intercept is automatically added within the function.}
+
+\item{covar_y}{a \code{matrix} or a \code{data.frame} of predictors of dimensions \code{n1 x q1}. 
+An intercept is automatically added within the function.}
+
+\item{covar_x}{a \code{matrix} or a \code{data.frame} of predictors of dimensions \code{n2 x q2}. 
 An intercept is automatically added within the function.}
 
 \item{jackknife_nrep}{the number of jackknife repetitions.
@@ -50,24 +58,31 @@ Association testing using Han & Lahiri estimating equations and jackknife approa
 }
 \examples{
 #rm(list=ls())
-res <- list()
-n_sims <- 1#500
-for(n in 1:n_sims){
-x <- matrix(ncol=2, nrow=99, stats::rnorm(n=99*2))
+n_sims <- 500
+res <- pbapply::pblapply(1:n_sims, function(n){
+nx <- 99
+ny <- 103
+x <- matrix(ncol=2, nrow=ny, stats::rnorm(n=ny*2))
 
 #plot(density(rbeta(n=1000, 1,2)))
-match_prob <- matrix(rbeta(n=103*99, 1, 2), nrow=103, ncol=99)
+match_prob <- diag(ny)[, 1:nx]#matrix(rbeta(n=ny*nx, 1, 2), nrow=ny, ncol=99)
 
+covar_y <- matrix(rnorm(n=ny, 1, 0.5), ncol=1)
+covar_x <- matrix(ncol=3, nrow=ny, stats::rnorm(n=ny*3))
 
-y <- rnorm(n=103, 1, 0.5)
-res[[n]] <- test_han2018(match_prob, y, x, jackknife_blocksize = 10)
-#y <- rbinom(n=103, 1, prob=0.5)
-#res[[n]] <- test_han2018(match_prob, y, x, dist_family = "binomial")
-cat(n, "/", n_sims, "\n", sep="")
-}
-pvals_F <- sapply(lapply(res, "[[", "F"), "[[", "pval")
-pvals_M <- sapply(lapply(res, "[[", "M"), "[[", "pval")
-pvals_M2 <- sapply(lapply(res, "[[", "M2"), "[[", "pval")
+#y <- rnorm(n=ny, mean = x \%*\% c(2,-3)  + covar_x \%*\% rep(0.2, ncol(covar_x)) + 0.5*covar_y, 0.5)
+y <- rbinom(n=ny, 1, prob=expit(x \%*\% c(2,-3)  + covar_x \%*\% rep(0.2, ncol(covar_x)) + 0.5*covar_y))
+return(
+#test_han2018(match_prob, y, x, jackknife_blocksize = 10, covar_x = NULL, covar_y = NULL)
+test_han2018(match_prob, y[1:ny], x[1:nx, ], dist_family = "binomial", jackknife_blocksize = 10, covar_x = covar_x[1:nx, ], covar_y = covar_y[1:ny, , drop=FALSE])
+)
+}, cl=parallel::detectCores()-1)
+pvals_F <- sapply(lapply(res, "[[", "F"), "[[", "beta")
+pvals_M <- sapply(lapply(res, "[[", "M"), "[[", "beta")
+pvals_M2 <- sapply(lapply(res, "[[", "M2"), "[[", "beta")
+quantile(pvals_F)
+quantile(pvals_M)
+quantile(pvals_M2)
 rowMeans(pvals_F<0.05)
 rowMeans(pvals_M<0.05)
 rowMeans(pvals_M2<0.05)
