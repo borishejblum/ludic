@@ -64,32 +64,34 @@
 #'
 #'@examples
 #'#rm(list=ls())
-#'res <- list()
+#'
 #'n_sims <- 1#5000
-#'for(n in 1:n_sims){
-#'x <- matrix(ncol=2, nrow=99, stats::rnorm(n=99*2))
 #'
-#'#plot(density(rbeta(n=1000, 1,2)))
-#'match_prob <- matrix(rbeta(n=103*99, 1, 2), nrow=103, ncol=99)
+#'mysim <- function(i){
+#'  x <- matrix(ncol=2, nrow=99, stats::rnorm(n=99*2))
+
+#'  #plot(density(rbeta(n=1000, 1,2)))
+#'  match_prob <- matrix(rbeta(n=103*99, 1, 2), nrow=103, ncol=99)
 #'
-#'
-#'#y <- rnorm(n=103, 1, 0.5)
-#'#res[[n]] <- test_combine(match_prob, y, x, dist_family="gaussian")$influencefn_pvals
-#'y <- rbinom(n=103, 1, prob=0.5)
-#'res[[n]] <- test_combine(match_prob, y, x, dist_family="binomial")$influencefn_pvals
-#'cat(n, "/", n_sims, "\n", sep="")
+#'  #y <- rnorm(n=103, mean = 1, sd = 0.5)
+#'  #return(test_combine(match_prob, y, x, dist_family="gaussian")$influencefn_pvals)
+#'  y <- rbinom(n=103, size = 1, prob=0.5)
+#'  return(test_combine(match_prob, y, x, dist_family="binomial")$influencefn_pvals)
 #'}
-#'size <- matrix(NA, ncol=nrow(res[[1]]), nrow=ncol(res[[1]])-2)
-#'colnames(size) <- rownames(res[[1]])
-#'rownames(size) <- colnames(res[[1]])[-(-1:0 + ncol(res[[1]]))]
-#'for(i in 1:(ncol(res[[1]])-2)){
-#'  size[i, ] <- rowMeans(sapply(res, function(m){m[, i]<0.05}), na.rm = TRUE)
-#'}
+#'#res <- pbapply::pblapply(1:n_sims, mysim, cl = parallel::detectCores()-1)
+#'res <- lapply(1:n_sims, mysim)
+#'
+#'size <- sapply(1:(ncol(res[[1]])-2), 
+#'               FUN = function(i){
+#'            rowMeans(sapply(res, function(m){m[, i]<0.05}), na.rm = TRUE)
+#'            }
+#')
+#'rownames(size) <- rownames(res[[1]])
+#'colnames(size) <- colnames(res[[1]])[-(-1:0 + ncol(res[[1]]))]
 #'size
-#'
 
 test_combine <- function(match_prob, y, x, covar = NULL,
-                     thresholds = seq(from = 0.5, to = 0.95, by = 0.05), #c(0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.85, 0.9, 0.95),
+                     thresholds = seq(from = 0.1, to = 0.9, by = 0.2), #c(0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.85, 0.9, 0.95),
                      nb_perturb = 200,
                      dist_family = c("gaussian", "binomial"),
                      impute_strategy = c("weighted average", "best")){
@@ -178,7 +180,9 @@ test_combine <- function(match_prob, y, x, covar = NULL,
     
     #this is somewhat of an identity matrix * probabilities matrix to keep probs 
     #only in rows with 1 match above threshold
-    match_prob_sel <-  diag(1*xi) %*% match_prob
+    match_prob_sel <- diag(1*xi) %*% match_prob
+    match_prob_sel <- match_prob_sel*prob_sup_cut
+    
     if(impute_strategy == "best"){
       xi_NA <- xi
       xi_NA[!xi] <- NA

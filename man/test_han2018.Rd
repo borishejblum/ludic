@@ -72,6 +72,7 @@ covar_x <- matrix(ncol=3, nrow=ny, stats::rnorm(n=ny*3))
 
 #y <- rnorm(n=ny, mean = x \%*\% c(2,-3)  + covar_x \%*\% rep(0.2, ncol(covar_x)) + 0.5*covar_y, 0.5)
 y <- rbinom(n=ny, 1, prob=expit(x \%*\% c(2,-3)  + covar_x \%*\% rep(0.2, ncol(covar_x)) + 0.5*covar_y))
+#glm(y~0+x+covar_y+covar_x, family = "binomial")
 return(
 #test_han2018(match_prob, y, x, jackknife_blocksize = 10, covar_x = NULL, covar_y = NULL)
 test_han2018(match_prob, y[1:ny], x[1:nx, ], dist_family = "binomial", jackknife_blocksize = 10, covar_x = covar_x[1:nx, ], covar_y = covar_y[1:ny, , drop=FALSE])
