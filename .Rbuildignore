@@ -7,3 +7,4 @@
 ^appveyor\.yml$
 ^codecov\.yml
 src/common1Mean_C.cpp
+^\.github$
