@@ -1,4 +1,4 @@
-citHeader("To cite tcgsaseq in publications, please use:")
+citHeader("To cite ludic in publications, please use:")
 
 bibentry(bibtype = "Article",
    title  = "Probabilistic Record Linkage of De-Identified Research Datasets Using Diagnosis Codes",
@@ -10,9 +10,24 @@ bibentry(bibtype = "Article",
    pages  = "180298",
    doi    = "10.1038/sdata.2018.298",
    url    = "https://doi.org/10.1038/sdata.2018.298",
-   note   = "R package version 0.1.7",
-   textVersion = "Hejblum BP, Weber G, Liao KP, Palmer N, Churchill S, Szolovits P, Murphy S, Kohane I, Cai T (2019) Probabilistic Record Linkage of De-Identified Research Datasets Using Diagnosis Codes. Scientific Data, 6:180298. <doi: 10.1038/sdata.2018.298>."
+   note   = "R package version 0.2.0",
+   textVersion = "Hejblum BP, Weber G, Liao KP, Palmer N, Churchill S, Szolovits P, Murphy S, Kohane I and Cai T (2019) Probabilistic Record Linkage of De-Identified Research Datasets Using Diagnosis Codes. Scientific Data, 6:180298. <doi: 10.1038/sdata.2018.298>."
 )
+
+bibentry(bibtype = "Article",
+   title  = "ATLAS: An automated association test using probabilistically linked health records with application to genetic studies",
+   author = c(person(c("Harrison","G"), "Zhang"), person(c("Boris","P"), "Hejblum"), person("Griffin", "Weber"),  person("Nathan", "Palmer"),  person("Susanne", "Churchill"),  person("Peter", "Szolovits"), person("Shawn", "Murphy"), person(c("Katherine", "P"), "Liao"), person("Isaac", "Kohane"), person("Tianxi", "Cai")),
+   journal = "JAMIA",
+   year   = "2021",
+   volume = "",
+   number = "",
+   pages  = "in press",
+   doi    = "10.1101/2021.05.02.21256490",
+   url    = "https://doi.org/10.1101/2021.05.02.21256490",
+   note   = "R package version 0.2.0",
+   textVersion = "Zhang HG, Hejblum BP, Weber G, Palmer N, Churchill S, Szolovits P, Murphy S, Liao KP, Kohane I and Cai T (2021). ATLAS: An automated association test using probabilistically linked health records with application to genetic studies. JAMIA, in press. <doi: 10.1101/2021.05.02.21256490>."
+)
+
 
 citFooter("We have invested a lot of time and efforts in implementing ludic, ", 
    "please cite it when using it for data analysis, research or any other purpose.")

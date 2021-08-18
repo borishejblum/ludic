@@ -33,6 +33,12 @@
 #'one match with a posterior probability above the threshold). Default is 
 #'\code{"weighted average"}.
 #'
+#'@references Zhang HG, Hejblum BP, Weber G, Palmer N, Churchill S, Szolovits P, 
+#'Murphy S, Liao KP, Kohane I and Cai T, ATLAS: An automated association test using 
+#'probabilistically linked health records with application to genetic studies, 
+#'\emph{JAMIA}, in press (2021). 
+#'\href{https://doi.org/10.1101/2021.05.02.21256490}{10.1101/2021.05.02.21256490}.
+#'
 #'@importFrom landpred VTM
 #'@importFrom fGarch dsstd sstdFit
 #'@importFrom stats binomial glm na.omit rnorm as.formula model.matrix
@@ -74,9 +80,9 @@
 #'  match_prob <- matrix(rbeta(n=103*99, 1, 2), nrow=103, ncol=99)
 #'
 #'  #y <- rnorm(n=103, mean = 1, sd = 0.5)
-#'  #return(test_combine(match_prob, y, x, dist_family="gaussian")$influencefn_pvals)
+#'  #return(atlas(match_prob, y, x, dist_family="gaussian")$influencefn_pvals)
 #'  y <- rbinom(n=103, size = 1, prob=0.5)
-#'  return(test_combine(match_prob, y, x, dist_family="binomial")$influencefn_pvals)
+#'  return(atlas(match_prob, y, x, dist_family="binomial")$influencefn_pvals)
 #'}
 #'#res <- pbapply::pblapply(1:n_sims, mysim, cl = parallel::detectCores()-1)
 #'res <- lapply(1:n_sims, mysim)
@@ -90,7 +96,7 @@
 #'colnames(size) <- colnames(res[[1]])[-(-1:0 + ncol(res[[1]]))]
 #'size
 
-test_combine <- function(match_prob, y, x, covar = NULL,
+atlas <- function(match_prob, y, x, covar = NULL,
                      thresholds = seq(from = 0.1, to = 0.9, by = 0.2), #c(0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.85, 0.9, 0.95),
                      nb_perturb = 200,
                      dist_family = c("gaussian", "binomial"),

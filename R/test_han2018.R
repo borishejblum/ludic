@@ -39,41 +39,42 @@
 #'}
 #'
 #'@references Han, Y., and Lahiri, P. (2019) Statistical Analysis with Linked Data. 
-#'International Statistical Review, 87: S139– S157. https://doi.org/10.1111/insr.12295. 
+#'International Statistical Review, 87: S139– S157. 
+#'\href{https://doi.org/10.1111/insr.12295}{10.1111/insr.12295}. 
 #'
 #'@export
 #'
 #'@examples
-#'#rm(list=ls())
-#'n_sims <- 500
-#'res <- pbapply::pblapply(1:n_sims, function(n){
-#'nx <- 99
-#'ny <- 103
-#'x <- matrix(ncol=2, nrow=ny, stats::rnorm(n=ny*2))
-#'
-#'#plot(density(rbeta(n=1000, 1,2)))
-#'match_prob <- diag(ny)[, 1:nx]#matrix(rbeta(n=ny*nx, 1, 2), nrow=ny, ncol=99)
-#'
-#'covar_y <- matrix(rnorm(n=ny, 1, 0.5), ncol=1)
-#'covar_x <- matrix(ncol=3, nrow=ny, stats::rnorm(n=ny*3))
-#'
-#'#y <- rnorm(n=ny, mean = x %*% c(2,-3)  + covar_x %*% rep(0.2, ncol(covar_x)) + 0.5*covar_y, 0.5)
-#'y <- rbinom(n=ny, 1, prob=expit(x %*% c(2,-3)  + covar_x %*% rep(0.2, ncol(covar_x)) + 0.5*covar_y))
-#'#glm(y~0+x+covar_y+covar_x, family = "binomial")
-#'return(
-#'#test_han2018(match_prob, y, x, jackknife_blocksize = 10, covar_x = NULL, covar_y = NULL)
-#'test_han2018(match_prob, y[1:ny], x[1:nx, ], dist_family = "binomial", jackknife_blocksize = 10, covar_x = covar_x[1:nx, ], covar_y = covar_y[1:ny, , drop=FALSE])
-#')
-#'}, cl=parallel::detectCores()-1)
-#'pvals_F <- sapply(lapply(res, "[[", "F"), "[[", "beta")
-#'pvals_M <- sapply(lapply(res, "[[", "M"), "[[", "beta")
-#'pvals_M2 <- sapply(lapply(res, "[[", "M2"), "[[", "beta")
-#'quantile(pvals_F)
-#'quantile(pvals_M)
-#'quantile(pvals_M2)
-#'rowMeans(pvals_F<0.05)
-#'rowMeans(pvals_M<0.05)
-#'rowMeans(pvals_M2<0.05)
+#'# rm(list=ls())
+#'# n_sims <- 500
+#'# res <- pbapply::pblapply(1:n_sims, function(n){
+#'# nx <- 99
+#'# ny <- 103
+#'# x <- matrix(ncol=2, nrow=ny, stats::rnorm(n=ny*2))
+#'# 
+#'# #plot(density(rbeta(n=1000, 1,2)))
+#'# match_prob <- diag(ny)[, 1:nx]#matrix(rbeta(n=ny*nx, 1, 2), nrow=ny, ncol=99)
+#'# 
+#'# covar_y <- matrix(rnorm(n=ny, 1, 0.5), ncol=1)
+#'# covar_x <- matrix(ncol=3, nrow=ny, stats::rnorm(n=ny*3))
+#'# 
+#'# #y <- rnorm(n=ny, mean = x %*% c(2,-3)  + covar_x %*% rep(0.2, ncol(covar_x)) + 0.5*covar_y, 0.5)
+#'# y <- rbinom(n=ny, 1, prob=expit(x %*% c(2,-3)  + covar_x %*% rep(0.2, ncol(covar_x)) + 0.5*covar_y))
+#'# #glm(y~0+x+covar_y+covar_x, family = "binomial")
+#'# return(
+#'# #test_han2018(match_prob, y, x, jackknife_blocksize = 10, covar_x = NULL, covar_y = NULL)
+#'# test_han2018(match_prob, y[1:ny], x[1:nx, ], dist_family = "binomial", jackknife_blocksize = 10, covar_x = covar_x[1:nx, ], covar_y = covar_y[1:ny, , drop=FALSE])
+#'# )
+#'# }, cl=parallel::detectCores()-1)
+#'# pvals_F <- sapply(lapply(res, "[[", "F"), "[[", "beta")
+#'# pvals_M <- sapply(lapply(res, "[[", "M"), "[[", "beta")
+#'# pvals_M2 <- sapply(lapply(res, "[[", "M2"), "[[", "beta")
+#'# quantile(pvals_F)
+#'# quantile(pvals_M)
+#'# quantile(pvals_M2)
+#'# rowMeans(pvals_F<0.05)
+#'# rowMeans(pvals_M<0.05)
+#'# rowMeans(pvals_M2<0.05)
 #'
 
 test_han2018 <- function(match_prob, y, x, covar_y = NULL, covar_x = NULL,
