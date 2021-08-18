@@ -28,12 +28,11 @@ files](https://cran.r-project.org/package=ludic) and the function
 `ludic` also implements an automated testing framework avoiding to
 select a given threshold for claiming a match in function `atlas()`.
 
-. JAMIA, in press. &lt;doi: 10.1101/2021.05.02.21256490&gt; &gt; Zhang
-HG, Hejblum BP, Weber G, Palmer N, Churchill S, Szolovits P, Murphy S,
-Liao KP, Kohane I and Cai T (2021). ATLAS: An automated association test
-using probabilistically linked health records with application to
-genetic studies. *JAMIA*, in press. [&lt;doi:
-10.1101/2021.05.02.21256490&gt;](https://doi.org/10.1101/2021.05.02.21256490).
+> Zhang HG, Hejblum BP, Weber G, Palmer N, Churchill S, Szolovits P,
+> Murphy S, Liao KP, Kohane I and Cai T (2021). ATLAS: An automated
+> association test using probabilistically linked health records with
+> application to genetic studies. *JAMIA*, in press. [&lt;doi:
+> 10.1101/2021.05.02.21256490&gt;](https://doi.org/10.1101/2021.05.02.21256490).
 
 ## Installation
 

@@ -1,9 +1,8 @@
-# This is an update of the ludic package fixing errors in r-devel (4.0.0) Debian checks 
+# This is an update of the ludic package updating citations 
 
 ## Test environments  
-* local macOS 10.15.1 install, R 3.6.1
-* ubuntu 16.04.6 (on travis-ci), R devel and release
-* Windows Visual Studio 2015 (on appveyor), R devel and release
+* local macOS 10.15.7 install, R 4.1.1
+* Linux (Ubuntu 20.04), macOS (10.15) and Windows (Server 2019), R devel and release (through GitHub Actions)
 
 ## R CMD check results  
 0 ERRORs | 0 WARNINGs | 0 NOTEs
