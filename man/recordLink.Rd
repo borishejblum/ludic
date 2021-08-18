@@ -92,5 +92,5 @@ round(res[c(1:3, 19:23), c(1:3, 19:23)], 3)
 Hejblum BP, Weber G, Liao KP, Palmer N, Churchill S, Szolovits P, 
 Murphy S, Kohane I and Cai T, Probabilistic Record Linkage of De-Identified 
 Research Datasets Using Diagnosis Codes, \emph{Scientific Data}, 6:180298 (2019). 
-\href{https://doi.org/10.1038/sdata.2018.298}{10.1038/sdata.2018.298}.
+\doi{10.1038/sdata.2018.298}.
 }

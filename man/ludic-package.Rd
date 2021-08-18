@@ -25,13 +25,13 @@ The main function of \code{ludic} is \code{\link{recordLink}}.
 Hejblum BP, Weber G, Liao KP, Palmer N, Churchill S, Szolovits P, 
 Murphy S, Kohane I and Cai T, Probabilistic Record Linkage of De-Identified 
 Research Datasets Using Diagnosis Codes, \emph{Scientific Data}, 6:180298 (2019). 
-\href{https://doi.org/10.1038/sdata.2018.298}{10.1038/sdata.2018.298}.
+\doi{10.1038/sdata.2018.298}.
 
 Zhang HG, Hejblum BP, Weber G, Palmer N, Churchill S, Szolovits P, 
 Murphy S, Liao KP, Kohane I and Cai T, ATLAS: An automated association test using 
 probabilistically linked health records with application to genetic studies, 
 \emph{JAMIA}, in press (2021). 
-\href{https://doi.org/10.1101/2021.05.02.21256490}{10.1101/2021.05.02.21256490}.
+\doi{10.1101/2021.05.02.21256490}.
 }
 \author{
 Boris P. Hejblum, Tianxi Cai

@@ -37,7 +37,7 @@
 #'Murphy S, Liao KP, Kohane I and Cai T, ATLAS: An automated association test using 
 #'probabilistically linked health records with application to genetic studies, 
 #'\emph{JAMIA}, in press (2021). 
-#'\href{https://doi.org/10.1101/2021.05.02.21256490}{10.1101/2021.05.02.21256490}.
+#'\doi{10.1101/2021.05.02.21256490}.
 #'
 #'@importFrom landpred VTM
 #'@importFrom fGarch dsstd sstdFit

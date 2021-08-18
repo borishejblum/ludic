@@ -40,16 +40,16 @@
 #'@references Hejblum BP, Weber G, Liao KP, Palmer N, Churchill S, Szolovits P, 
 #'Murphy S, Kohane I and Cai T, Probabilistic Record Linkage of De-Identified 
 #'Research Datasets Using Diagnosis Codes, \emph{Scientific Data}, 6:180298 (2019). 
-#'\href{https://doi.org/10.1038/sdata.2018.298}{10.1038/sdata.2018.298}.
+#'\doi{10.1038/sdata.2018.298}.
 
 #'@references Liao, K. P. et al. Electronic medical records for discovery research 
 #'in rheumatoid arthritis. \emph{Arthritis Care & Research} 62, 1120-1127 (2010). 
-#'\href{https://doi.org/10.1002/acr.20184}{10.1002/acr.20184}
+#'\doi{10.1002/acr.20184}
 #'
 #'@references Liao, K. P. et al. Methods to Develop an Electronic Medical Record 
 #'Phenotype Algorithm to Compare the Risk of Coronary Artery Disease across 3 
 #'Chronic Disease Cohorts. \emph{PLoS ONE} 10, e0136651 (2015). 
-#'\href{https://doi.org/10.1371/journal.pone.0136651}{10.1371/journal.pone.0136651}
+#'\doi{10.1371/journal.pone.0136651}
 #'
 #'@examples
 #'

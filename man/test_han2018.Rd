@@ -71,11 +71,14 @@ Association testing using Han & Lahiri estimating equations and jackknife approa
 # covar_x <- matrix(ncol=3, nrow=ny, stats::rnorm(n=ny*3))
 # 
 # #y <- rnorm(n=ny, mean = x \%*\% c(2,-3)  + covar_x \%*\% rep(0.2, ncol(covar_x)) + 0.5*covar_y, 0.5)
-# y <- rbinom(n=ny, 1, prob=expit(x \%*\% c(2,-3)  + covar_x \%*\% rep(0.2, ncol(covar_x)) + 0.5*covar_y))
+# y <- rbinom(n=ny, 1, prob=expit(x \%*\% c(2,-3)  + covar_x \%*\% 
+#             rep(0.2, ncol(covar_x)) + 0.5*covar_y))
 # #glm(y~0+x+covar_y+covar_x, family = "binomial")
 # return(
 # #test_han2018(match_prob, y, x, jackknife_blocksize = 10, covar_x = NULL, covar_y = NULL)
-# test_han2018(match_prob, y[1:ny], x[1:nx, ], dist_family = "binomial", jackknife_blocksize = 10, covar_x = covar_x[1:nx, ], covar_y = covar_y[1:ny, , drop=FALSE])
+# test_han2018(match_prob, y[1:ny], x[1:nx, ], dist_family = "binomial", 
+#              jackknife_blocksize = 10, covar_x = covar_x[1:nx, ], 
+#              covar_y = covar_y[1:ny, , drop=FALSE])
 # )
 # }, cl=parallel::detectCores()-1)
 # pvals_F <- sapply(lapply(res, "[[", "F"), "[[", "beta")
@@ -92,5 +95,5 @@ Association testing using Han & Lahiri estimating equations and jackknife approa
 \references{
 Han, Y., and Lahiri, P. (2019) Statistical Analysis with Linked Data. 
 International Statistical Review, 87: S139– S157. 
-\href{https://doi.org/10.1111/insr.12295}{10.1111/insr.12295}.
+\doi{10.1111/insr.12295}.
 }

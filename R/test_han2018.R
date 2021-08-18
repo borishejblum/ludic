@@ -40,7 +40,7 @@
 #'
 #'@references Han, Y., and Lahiri, P. (2019) Statistical Analysis with Linked Data. 
 #'International Statistical Review, 87: S139– S157. 
-#'\href{https://doi.org/10.1111/insr.12295}{10.1111/insr.12295}. 
+#'\doi{10.1111/insr.12295}. 
 #'
 #'@export
 #'
@@ -59,11 +59,14 @@
 #'# covar_x <- matrix(ncol=3, nrow=ny, stats::rnorm(n=ny*3))
 #'# 
 #'# #y <- rnorm(n=ny, mean = x %*% c(2,-3)  + covar_x %*% rep(0.2, ncol(covar_x)) + 0.5*covar_y, 0.5)
-#'# y <- rbinom(n=ny, 1, prob=expit(x %*% c(2,-3)  + covar_x %*% rep(0.2, ncol(covar_x)) + 0.5*covar_y))
+#'# y <- rbinom(n=ny, 1, prob=expit(x %*% c(2,-3)  + covar_x %*% 
+#'#             rep(0.2, ncol(covar_x)) + 0.5*covar_y))
 #'# #glm(y~0+x+covar_y+covar_x, family = "binomial")
 #'# return(
 #'# #test_han2018(match_prob, y, x, jackknife_blocksize = 10, covar_x = NULL, covar_y = NULL)
-#'# test_han2018(match_prob, y[1:ny], x[1:nx, ], dist_family = "binomial", jackknife_blocksize = 10, covar_x = covar_x[1:nx, ], covar_y = covar_y[1:ny, , drop=FALSE])
+#'# test_han2018(match_prob, y[1:ny], x[1:nx, ], dist_family = "binomial", 
+#'#              jackknife_blocksize = 10, covar_x = covar_x[1:nx, ], 
+#'#              covar_y = covar_y[1:ny, , drop=FALSE])
 #'# )
 #'# }, cl=parallel::detectCores()-1)
 #'# pvals_F <- sapply(lapply(res, "[[", "F"), "[[", "beta")
@@ -174,7 +177,7 @@ test_han2018 <- function(match_prob, y, x, covar_y = NULL, covar_x = NULL,
   if(dist_family == "binomial"){ #logistic regression
     if(!is.null(covar_x) && !is.null(covar_y)){
       ptot <- p + ncol(covar_x) + ncol(covar_y)
-      est_eq <- function(beta, x, y, covar_x, covar_y, match_prob){
+      est_eq <- function(beta, x, y, covar_x=NULL, covar_y=NULL, match_prob){
         xx <- cbind(x, covar_x)
         H <- rbind(tcrossprod(t(xx), match_prob), t(covar_y))
         nxx <- ncol(xx)
@@ -183,14 +186,14 @@ test_han2018 <- function(match_prob, y, x, covar_y = NULL, covar_x = NULL,
       }
     }else if(!is.null(covar_x)){
       ptot <- p + ncol(covar_x)
-      est_eq <- function(beta, x, y, covar_x, covar_y=NULL, match_prob){
+      est_eq <- function(beta, x, y, covar_x=NULL, covar_y=NULL, match_prob){
         xx <- cbind(x, covar_x)
         H <- tcrossprod(t(xx), match_prob)
         return(H %*% (y - expit(match_prob %*% xx %*% beta)))
       }
     }else if(!is.null(covar_y)){
       ptot <- p + ncol(covar_y)
-      est_eq <- function(beta, x, y, covar_x=NULL, covar_y, match_prob){
+      est_eq <- function(beta, x, y, covar_x=NULL, covar_y=NULL, match_prob){
         nx <- ncol(x)
         ncy <- ncol(covar_y)
         H <- rbind(tcrossprod(t(x), match_prob), t(covar_y))
@@ -206,7 +209,7 @@ test_han2018 <- function(match_prob, y, x, covar_y = NULL, covar_x = NULL,
   }else if(dist_family == "gaussian"){  #linear regression
     if(!is.null(covar_x) && !is.null(covar_y)){
       ptot <- p + ncol(covar_x) + ncol(covar_y)
-      est_eq <- function(beta, x, y, covar_x, covar_y, match_prob){
+      est_eq <- function(beta, x, y, covar_x=NULL, covar_y=NULL, match_prob){
         xx <- cbind(x, covar_x)
         H <- rbind(tcrossprod(t(xx), match_prob), t(covar_y))
         nxx <- ncol(xx)
@@ -215,14 +218,14 @@ test_han2018 <- function(match_prob, y, x, covar_y = NULL, covar_x = NULL,
       }
     }else if(!is.null(covar_x)){
       ptot <- p + ncol(covar_x)
-      est_eq <- function(beta, x, y, covar_x, covar_y=NULL, match_prob){
+      est_eq <- function(beta, x, y, covar_x=NULL, covar_y=NULL, match_prob){
         xx <- cbind(x, covar_x)
         H <- tcrossprod(t(xx), match_prob)
         return(H %*% (y - match_prob %*% xx %*% beta))
       }
     }else if(!is.null(covar_y)){
       ptot <- p + ncol(covar_y)
-      est_eq <- function(beta, x, y, covar_x=NULL, covar_y, match_prob){
+      est_eq <- function(beta, x, y, covar_x=NULL, covar_y=NULL, match_prob){
         nx <- ncol(x)
         ncy <- ncol(covar_y)
         H <- rbind(tcrossprod(t(x), match_prob), t(covar_y))
