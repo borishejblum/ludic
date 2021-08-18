@@ -16,7 +16,7 @@ codes only, in the absence of direct identifiers .
 Package: \tab ludic\cr
 Type: \tab Package\cr
 Version: \tab ludic 0.2.0\cr
-Date: \tab 2021-04-01\cr
+Date: \tab 2021-08-18\cr
 License: \tab \href{https://cran.r-project.org/web/licenses/MIT}{The "MIT License" (MIT)}\cr
 }
 The main function of \code{ludic} is \code{\link{recordLink}}.
