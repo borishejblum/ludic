@@ -14,7 +14,7 @@
 #' }
 #' The main function of \code{ludic} is \code{\link{recordLink}}.
 #' 
-#' @author Boris P. Hejblum, Tianxi Cai
+#' @author Boris P. Hejblum, Harrison G. Zhang, Tianxi Cai
 #' --- Maintainer: Boris P. Hejblum
 #' 
 #'@references Hejblum BP, Weber G, Liao KP, Palmer N, Churchill S, Szolovits P, 

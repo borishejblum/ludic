@@ -1,8 +1,8 @@
 # This is an update of the ludic package updating citations 
 
 ## Test environments  
-* local macOS 10.15.7 install, R 4.1.1
-* Linux (Ubuntu 20.04), macOS (10.15) and Windows (Server 2019), R devel and release (through GitHub Actions)
+ * local R installation, R 4.4.3
+ * Linux (Ubuntu 24.04), macOS (14.7) and Windows (Server 2022 10.0), R devel and release (through GitHub Actions)
 
 ## R CMD check results  
 0 ERRORs | 0 WARNINGs | 0 NOTEs
