@@ -12,3 +12,4 @@ src/common1Mean_C.cpp
 ^docs$
 ^pkgdown$
 ^codecov\.yml$
+^CRAN-SUBMISSION$

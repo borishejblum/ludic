@@ -19,13 +19,13 @@ bibentry(bibtype = "Article",
    author = c(person(c("Harrison","G"), "Zhang"), person(c("Boris","P"), "Hejblum"), person("Griffin", "Weber"),  person("Nathan", "Palmer"),  person("Susanne", "Churchill"),  person("Peter", "Szolovits"), person("Shawn", "Murphy"), person(c("Katherine", "P"), "Liao"), person("Isaac", "Kohane"), person("Tianxi", "Cai")),
    journal = "JAMIA",
    year   = "2021",
-   volume = "",
-   number = "",
-   pages  = "in press",
-   doi    = "10.1101/2021.05.02.21256490",
-   url    = "https://doi.org/10.1101/2021.05.02.21256490",
+   volume = "28",
+   number = "12",
+   pages  = "2582-2592",
+   doi    = "10.1093/jamia/ocab187",
+   url    = "https://doi.org/10.1093/jamia/ocab187",
    note   = "R package version 0.2.1",
-   textVersion = "Zhang HG, Hejblum BP, Weber G, Palmer N, Churchill S, Szolovits P, Murphy S, Liao KP, Kohane I and Cai T (2021). ATLAS: An automated association test using probabilistically linked health records with application to genetic studies. JAMIA, in press. <doi: 10.1101/2021.05.02.21256490>."
+   textVersion = "Zhang HG, Hejblum BP, Weber G, Palmer N, Churchill S, Szolovits P, Murphy S, Liao KP, Kohane I and Cai T (2021). ATLAS: An automated association test using probabilistically linked health records with application to genetic studies. JAMIA, 28(12):2582-2592. <doi: 10.1093/jamia/ocab187>."
 )
 
 

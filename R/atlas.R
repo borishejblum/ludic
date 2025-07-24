@@ -36,8 +36,8 @@
 #'@references Zhang HG, Hejblum BP, Weber G, Palmer N, Churchill S, Szolovits P, 
 #'Murphy S, Liao KP, Kohane I and Cai T, ATLAS: An automated association test using 
 #'probabilistically linked health records with application to genetic studies, 
-#'\emph{JAMIA}, in press (2021). 
-#'\doi{10.1101/2021.05.02.21256490}.
+#'\emph{JAMIA}, 28(12):2582-2592, (2021). 
+#'\doi{10.1093/jamia/ocab187}.
 #'
 #'@importFrom landpred VTM
 #'@importFrom fGarch dsstd sstdFit
