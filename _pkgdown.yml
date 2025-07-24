@@ -1,0 +1,8 @@
+url: https://borishejblum.github.io/ludic/
+template:
+  bootstrap: 5
+  bootswatch: cosmo
+authors:
+  Boris P Hejblum:
+    href: https://borishejblum.science
+

@@ -33,6 +33,14 @@ probabilistically linked health records with application to genetic studies,
 \emph{JAMIA}, in press (2021). 
 \doi{10.1101/2021.05.02.21256490}.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://borishejblum.github.io/ludic/}
+  \item Report bugs at \url{https://github.com/borishejblum/ludic/issues}
+}
+
+}
 \author{
 Boris P. Hejblum, Tianxi Cai
 --- Maintainer: Boris P. Hejblum

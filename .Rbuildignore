@@ -8,3 +8,7 @@
 ^codecov\.yml
 src/common1Mean_C.cpp
 ^\.github$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^codecov\.yml$

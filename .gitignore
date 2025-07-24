@@ -5,3 +5,4 @@
 *.so
 *.Rproj
 .DS_Store
+docs

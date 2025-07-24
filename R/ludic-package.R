@@ -28,11 +28,9 @@
 #'\emph{JAMIA}, in press (2021). 
 #'\doi{10.1101/2021.05.02.21256490}.
 #'
-#' @docType package
 #' @name ludic-package
 #' @aliases ludic
 #' 
 #' @useDynLib ludic, .registration = TRUE
 #' @importFrom Rcpp evalCpp
-#' 
-NULL
+"_PACKAGE"
