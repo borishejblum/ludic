@@ -6,11 +6,10 @@
 <!-- badges: start -->
 
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/ludic)](https://cran.r-project.org/package=ludic)
-[![R-CMD-check](https://github.com/borishejblum/ludic/workflows/R-CMD-check/badge.svg)](https://github.com/borishejblum/ludic/actions)
+[![R-CMD-check](https://github.com/borishejblum/ludic/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/borishejblum/ludic/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
 coverage](https://codecov.io/gh/borishejblum/ludic/graph/badge.svg)](https://app.codecov.io/gh/borishejblum/ludic)
 [![Downloads](https://cranlogs.r-pkg.org/badges/ludic?color=blue)](https://www.r-pkg.org/pkg/ludic)
-[![R-CMD-check](https://github.com/borishejblum/ludic/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/borishejblum/ludic/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 ## Overview
