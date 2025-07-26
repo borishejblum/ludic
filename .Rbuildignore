@@ -13,3 +13,4 @@ src/common1Mean_C.cpp
 ^pkgdown$
 ^codecov\.yml$
 ^CRAN-SUBMISSION$
+url_whitelist

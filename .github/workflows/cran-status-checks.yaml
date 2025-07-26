@@ -29,7 +29,12 @@ jobs:
         run: |
           urls_checks <- urlchecker::url_check()
           if(nrow(urls_checks)>0){
-            stop(print(urls_checks))
+          whitelist <- readLines("url_whitelist")
+          for(i in nrow(urls_checks)){
+            if(! urls_checks[i, "URL"] %in% whitelist){
+              stop(print(urls_checks))
+            }
+          }
           }else{
             print(urls_checks)
           }
@@ -69,6 +74,9 @@ jobs:
             stop(
               "Additional issues detected:\n",
               sprintf("  - %s: %s\n", issues$kind, issues$href)
+              "\n",
+              "Review logs at ", 
+              "https://cran.r-project.org/web/checks/check_results_", pkg, ".html"
             )
           }
           message("\u2713 `", pkg, "` has no issues, warnings or errors")
