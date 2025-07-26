@@ -73,7 +73,7 @@ jobs:
             issues <- res$issues[[1]]
             stop(
               "Additional issues detected:\n",
-              sprintf("  - %s: %s\n", issues$kind, issues$href)
+              sprintf("  - %s: %s\n", issues$kind, issues$href),
               "\n",
               "Review logs at ", 
               "https://cran.r-project.org/web/checks/check_results_", pkg, ".html"
